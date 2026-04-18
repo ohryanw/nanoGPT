@@ -1,0 +1,6348 @@
+
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int binary_search(int *a, int n, int k){
+    int l = 0, r = n-1;
+    int mid;
+    while(l <= r){
+        mid = (l+r)/2;
+        if(k == a[mid]){
+            return mid;
+        }else if(k < a[mid]){
+            r = mid - 1;
+        }else if(k > a[mid]){
+            l = mid + 1;
+        }
+    }
+    return -1;
+}
+
+void selection_sort(int* a, int n){
+    int i,j, min_ind;
+    for(int i = 0; i < n - 1; i++){
+        min_ind = i;
+        for(int j = i + 1; j < n; j++){
+            if(a[j] < a[min_ind]){
+                min_ind = j;
+            }
+        }
+        swap(a[min_ind],a[i]);
+    }
+}
+
+int main(){
+    int a[50], size;
+    cout<<"Enter size : ";
+    cin>>size;
+    if(size <= 50 && size >= 0){
+        cout<<"Enter elements : ";
+        for(int i = 0 ; i < size; i++){
+            cin>>a[i];
+        }
+
+        selection_sort(a,size);
+        int data;
+        cout<<"Enter element to find (binary searching) : ";
+        cin>>data;
+        int res = binary_search(a,size,data);
+        if(res != -1){
+            cout<<"Position : "<<res+1<<" , Index : "<<res<<endl;
+        }else{
+            cout<<"Element not found"<<endl;
+        }
+    }else{
+        cout<<"Range error: size out of bound"<<endl;
+    }
+    return 0;
+}
+
+#include <iostream.h>
+#include<conio.h>
+#include<iomanip.h>//input-output manipulator
+#include<stdlib.h> 
+#include<string.h>
+#include<stdio.h>
+#include<fstream.h>
+class book
+{
+	char bno[6];//bookno.
+	char bname[50];//bookname
+	char aname[20];//authorname
+	public:
+	void createbook()
+	{
+		cout<<"\nNEW BOOK ENTRY...\n";
+		cout<<"\nENTER BOOK NO.";
+		cin>>bno;
+		cout<<"\nENTER BOOK NAME";
+		gets(bname);//enables enter with space
+		cout<<"\nENTER AUTHOR NAME";
+		gets(aname);
+		cout<<"\n\n\nBook Created..";
+	}
+	void showbook()
+	{
+		cout<<"\nBook Number: "<<bno;
+		cout<<"\nBook Name: ";
+		puts(bname);
+		cout<<"\nBook Author Name: ";
+		puts(aname);
+	}
+	void modifybook()
+	{
+		cout<<"\nBook Number: "<<bno;
+		cout<<"\nModify Book Name :";
+		gets(bname);
+		cout<<"\nModify Author's Name :";
+		gets(aname);
+		
+	}
+	
+	char* retbno()//string return
+	{
+		return bno;
+	
+	}
+	void report()
+	{
+		cout<<bno<<setw(30)<<bname<<setw(30)<<aname<<endl;
+	}
+};//class ends here
+
+class student
+{
+	char admno[6];//admission no.
+	char name[20];
+	char stbno[6];// student book no 
+	int token;//total book of student
+	public:
+	void createstudent()
+	{
+		clrscr();
+		cout<<"\nNEW STUDENT ENTRY...\n";
+		cout<<"\nEnter The Admission No. ";
+		cin>>admno;
+		cout<<"Enter The Student Name ";
+		gets(name);
+		token=0;
+		stbno[0]='\0';
+		cout<<"\n\nStudent Record Created...";
+	}
+	void showstudent()
+	{
+		cout<<"\nAdmission Number : "<<admno;
+		cout<<"\nStudent Name : ";
+		puts(name);
+		cout<<"\nNo of Book Issued : "<<token;
+		if(token==1)
+		{
+			cout<<"\nBook Number "<<stbno;
+		}
+	}
+	void modifystudent()
+	{
+		cout<<"\nAdmission No. "<<admno;
+		cout<<"\nModify Student Name : ";
+		gets(name);
+	}
+	char* retadmno()
+	{
+		return admno;
+	}
+	char* retstbno()
+	{
+		return stbno;
+	}
+	int rettoken()
+	{
+		return token;
+	}
+	void addtoken()
+	{
+		token=1;
+	}
+	void resettoken()
+	{ 
+	token=0;
+	}
+	void getstbno(char t[])
+	{
+		strcpy(stbno,t);
+	}
+	void report()
+	{
+		cout<<"\t"<<admno<<setw(20)<<name<<setw(10)<<token<<endl ;
+	}
+};//class ends here
+fstream fp,fp1;//object
+book bk;//book class object
+student st;//student class object
+
+void writebook()
+{
+	char ch;
+	fp.open("book.dat",ios::out|ios::app);//write and append data
+	do{
+		clrscr();
+		bk.createbook();
+		fp.write((char*)&bk,sizeof(book));//size of class
+		cout<<"\n\nDo you want to add more record...(y/n?) ";
+		cin>>ch;
+	}while(ch=='y'||ch=='Y');
+	fp.close();
+}
+
+void writestudent()
+{
+	char ch;
+	fp.open("student.dat",ios::out|ios::app);//write and append data
+	do{
+		clrscr();
+		st.createstudent();
+		fp.write((char*)&st,sizeof(student));//size of class
+		cout<<"\n\nDo you want to add more record...(y/n?) ";
+		cin>>ch;
+	}while(ch=='y'||ch=='Y');
+	fp.close();
+}
+ void displayspb(char n[])
+ {
+	 cout<<"\nBOOK DETAILS\n";
+	 int flag=0;//book not found
+	 fp.open("book.dat",ios::in);//read data
+	 while(fp.read((char *)&bk,sizeof(book)))
+	 {
+		 if(strcmpi(bk.retbno(),n)==0)//not case sensitive
+		 {
+			  bk.showbook();
+			  flag=1;
+		 }
+	 }
+	 fp.close();
+	 if(flag==0)//book not found
+	 {
+		 cout<<"\n\nBook does not exist";
+         		 
+	 }
+	 getch();
+}
+ void displaysps(char n[])
+ {
+	 cout<<"\nSTUDENT DETAILS\n";
+	 int flag=0;//student not found
+	 fp.open("student.dat", ios::in);//read data
+	 while(fp.read((char *)&st,sizeof(student)))
+	 {
+		 if(strcmpi(st.retadmno(),n)==0)//not case sensitive
+		 {
+			  st.showstudent();
+			  flag=1;
+		 }
+	 }
+	 fp.close();
+	 if(flag==0)//student not found
+	 {
+		 cout<<"\n\nStudent does not exist";
+         		 
+	 }
+	 getch();
+}
+void modifybook()
+{
+	char n[6];
+	int found=0;//seach book of given data
+	clrscr();
+	cout<<"\n\nMODIFY BOOK RECORD...";
+	cout<<"\n\nEnter the book no. ";
+	cin>>n;
+	fp.open("book.dat",ios::in|ios::out);
+	while(fp.read((char*)&bk,sizeof(book)) && found==0)
+	{
+		if(strcmpi(bk.retbno(),n)==0)
+		{
+			bk.showbook();
+			cout<<"\nEnter the new details book";
+			bk.modifybook();
+			int pos=-1*sizeof(bk);
+			fp.seekp(pos,ios::cur);//back from current position
+			fp.write((char *)&bk,sizeof(book));
+			cout<<"\n\nRecord Updated";
+			found=1;
+		}
+			
+	}
+	fp.close();
+	if(found==0)
+	{
+		cout<<"\n\nRecord Not Found";
+		
+	}
+	getch();//press key to get out	
+}
+ void modifystudent()
+{
+	char n[6];
+	int found=0;//seach book of given data
+	clrscr();
+	cout<<"\n\nMODIFY STUDENT RECORD...";
+	cout<<"\n\nEnter the Admission no. ";
+	cin>>n;
+	fp.open("student.dat",ios::in|ios::out);
+	while(fp.read((char*)&st,sizeof(student)) && found==0)
+	{
+		if(strcmpi(st.retadmno(),n)==0)
+		{
+			st.showstudent();
+			cout<<"\nEnter the new details of student";
+			st.modifystudent();
+			int pos=-1*sizeof(st);
+			fp.seekp(pos,ios::cur);//back from current position
+			fp.write((char *)&st,sizeof(student)); 
+			cout<<"\n\nRecord Updated";
+			found=1;
+		}
+			
+	}
+	fp.close();
+	if(found==0)
+	{
+		cout<<"\n\nRecord Not Found";
+		
+	}
+	getch();//press key to get out	
+}
+ 
+ void deletestudent()
+ {
+	 char n[6];
+	 int flag=0;
+	 clrscr();
+	 cout<<"\n\n\n\tDELETE STUDENT...";
+	 cout<<"\n\nEnter the Admission no> : ";
+	 cin>>n;
+	 fp.open("student.dat",ios::in|ios::out);
+	 fstream fp2;
+	 fp2.open("temp.dat",ios::out);
+	 fp.seekg(0,ios::beg);
+	 while(fp.read((char*)&st,sizeof(student)))
+	 {
+		 if(strcmpi(st.retadmno(),n)!=0)
+		 {
+			 fp2.write((char*)&st,sizeof(student));
+		 }
+		 else{
+			 flag=1;//student found
+		 }
+	 } 
+	 fp2.close();
+	 fp.close();
+	 remove("student.dat");
+	 rename("temp.dat","student.dat");//data after deletion moved to temp
+	 if(flag==1)
+	 {
+		 cout<<"\n\n\tRecord Deleted..";
+	 }
+	 else
+	 {
+		cout<<"\n\nRecord not Found"; 
+	 }
+	 getch();
+ }
+  void deletebook()
+ {
+	 char n[6];//book no.
+	 int flag=0;
+	 clrscr();
+	 cout<<"\n\n\n\tDELETE BOOK...";
+	 cout<<"\n\nEnter the Book no> : ";
+	 cin>>n;
+	 fp.open("book.dat",ios::in|ios::out);
+	 fstream fp2;//New onject
+	 fp2.open("Temp.dat",ios::out);//temp having data else than that to be deleted
+	 fp.seekg(0,ios::beg);
+	 while(fp.read((char*)&bk,sizeof(book)))
+	 {
+		 if(strcmpi(bk.retbno(),n)!=0)
+		 {
+			 fp2.write((char*)&st,sizeof(book));
+		 }
+		 else{
+			 flag=1;//student found
+		 }
+	 } 
+	 fp2.close();
+	 fp.close();
+	 remove("book.dat");
+	 rename("Temp.dat","book.dat");//data after deletion moved to temp
+	 if(flag==1)
+	 {
+		 cout<<"\n\n\tRecord Deleted... ";
+	 }
+	 else
+	 {
+		cout<<"\n\nRecord not Found"; 
+	 }
+	 getch();
+ }
+ void displayalls()
+ {
+	 clrscr();
+	 fp.open("student.dat",ios::in);//read mode
+	 if(!fp)
+	 {
+		 cout<<"File Could Not Be Open";
+		 getch();
+		 return;//press any key and return
+	 }
+	 cout<<"\n\n\t\tStudent List\n\n";
+	 cout<<"==================================================================\n";
+	 cout<<"\tAdmission No."<<setw(10)<<"Name"<<setw(20)<<"Book Issued\n";
+	 cout<<"==================================================================\n";
+	 while(fp.read((char*)&st,sizeof(student)))
+	 {
+		 st.report();
+	 }
+	 fp.close();
+	 getch();
+ }
+  void displayallb()
+ {
+	 clrscr();
+	 fp.open("book.dat",ios::in);//read mode
+	 if(!fp)
+	 {
+		 cout<<"File Could Not Be Open";
+		 getch();
+		 return;//press any key and return
+	 }
+	 cout<<"\n\n\t\tBook List\n\n";
+	 cout<<"==================================================================\n";
+	 cout<<"\tBook No."<<setw(20)<<"Book Name"<<setw(25)<<"Book Author\n";
+	 cout<<"==================================================================\n";
+	 while(fp.read((char*)&bk,sizeof(book)))
+	 {
+		 bk.report();
+	 }
+	 fp.close();
+	 getch();
+ }
+ void bookissue()
+ {
+	 char sn[6],bn[6];
+	 int found=0,flag=0;
+	 clrscr();
+	 cout<<"\n\nBOOK ISSUE...";
+	 cout<<"\n\n\tEnter Admission no.";
+	 cin>>sn;
+	 fp.open("student.dat",ios::in|ios::out);
+	 fp1.open("book.dat",ios::in|ios::out);
+	 while(fp.read((char*)&st,sizeof(student))&& found==0)
+	 {
+		 if(strcmpi(st.retadmno(),sn)==0)//compare admsn no.
+		 {
+			 found=1;
+			 if(st.rettoken()==0)//if book not issued
+			 {
+				 cout<<"\n\n\tEnter The Book No.";
+			 cin>>bn;
+			  while(fp1.read((char*)&bk,sizeof(book))&& flag==0)
+			  {
+				   if(strcmpi(bk.retbno(),bn)==0)//compare book no.
+		             {
+			          flag=1;
+					  st.addtoken();
+					  st.getstbno(bk.retbno());//pass book no.
+					  int pos=-1*sizeof(st);
+					  fp.seekg(pos,ios::cur);
+					  fp.write((char*)&st,sizeof(student));
+					  cout<<"\n\n\tBook Issued Successfully\n\n Please Note The Book Issue Date On Backside Of Your Book And Return Book Within 15 Days, Otherwise Fine Of 15 Rs Per Day";
+					  
+					
+			  }
+		 }
+		 if(flag==0)
+		 {
+			 cout<<"Book No. Does Not Exists";
+		 }
+		 
+	 } 
+	 
+	 else
+	 {
+		 
+		 cout<<"You Have Not Returned The Last Book";
+		 
+	 }
+	 
+		 
+ 
+	 }
+ 
+ }
+ if(found==0)
+ {
+	 cout<<"Student Record Not Exists...";
+	 
+ }
+ getch();
+ fp.close();
+ fp1.close();
+ }
+ 
+ void bookdeposit()
+ {
+	 char sn[6],bn[6];
+	 int found=0,flag=0,day,fine;
+	 clrscr();
+	 cout<<"\n\nBOOK DEPOSIT...";
+	 cout<<"\n\n\tEnter Admission no. Of Student";
+	 cin>>sn;
+	 fp.open("student.dat",ios::in|ios::out);
+	 fp1.open("book.dat",ios::in|ios::out);
+	 while(fp.read((char*)&st,sizeof(student))&& found==0)
+	 {
+		 if(strcmpi(st.retadmno(),sn)==0)//compare admsn no.
+		 {
+			 found=1;
+			 if(st.rettoken()==1)//if book issued
+			 {
+				 while(fp1.read((char*)&bk,sizeof(book))&& flag==0)
+			  {
+				   if(strcmpi(bk.retbno(),st.retstbno())==0)
+		             {
+			          flag=1;
+					  bk.showbook();
+					  cout<<"\n\n Book Deposited In No. Of Days";
+					  cin>>day;
+					  if(day>15)
+					  {
+						  fine=(day-15)*1;
+						  cout<<"\n\n Fine = "<<fine;
+					  }
+					  st.resettoken();
+					 
+					  int pos=-1*sizeof(st);
+					  fp.seekg(pos,ios::cur);
+					  fp.write((char*)&st,sizeof(student));
+					  cout<<"\n\n\tBook Deposited Successfully";
+					  
+					
+			  }
+		 }
+		 if(flag==0)
+		 {
+			 cout<<"Book No. Does Not Exists";
+		 }
+		 
+	 } 
+	 
+	 else
+	 {
+		 
+		 cout<<"No Book Issued";
+		 
+	 }
+	 
+		 
+ 
+	 }
+ 
+ }
+ if(found==0)
+ {
+	 cout<<"Student Record Not Exists...";
+	 
+ }
+ getch();
+ fp.close();
+ fp1.close();
+ }
+ 
+ 
+void start()
+{ clrscr();
+gotoxy(35,11);
+cout<<"LIBRARY";
+gotoxy(35,14);
+cout<<"MANAGEMENT";
+gotoxy(35,17);
+cout<<"SYSTEM";
+cout<<" \n  by: Chahat"; 
+getch();
+}
+void adminmenu()
+{
+	clrscr();
+	int ch2;
+	cout<<"\n\n\n\tADMINISTRATOR MENU";
+	cout<<"\n\n\n\t1.CREATE STUDENT RECORD";
+	cout<<"\n\n\n\t2.DISPLAY ALL STUDENT RECORD";
+	cout<<"\n\n\n\t3.DISPLAY SPECIFIC STUDENT RECORD";
+	cout<<"\n\n\n\t4.MODIFY STUDENT RECORD";
+	cout<<"\n\n\n\t5.DELETE STUDENT RECORD";
+	cout<<"\n\n\n\t6.CREATE BOOK";
+	cout<<"\n\n\n\t7.CREATE ALL BOOKS";
+	cout<<"\n\n\n\t8.DISPLAY SPECIFIC BOOK";
+	cout<<"\n\n\n\t9.MODIFY BOOK RECORD";
+	cout<<"\n\n\n\t10.DELETE BOOK RECORD";
+	cout<<"\n\n\n\t11.BACK TO MAIN MENU";
+	cout<<"\n\n\n\tPLEASE ENTER YOUR CHOICE(1-11)";
+	cin>>ch2;
+	switch(ch2)
+	{
+		case 1: writestudent();
+		break;
+		case 2: displayalls();
+		break;
+		case 3: char num[6];
+		clrscr();
+		cout<<"\n\n\t Please enter admission no.";
+		cin>>num;
+		displaysps(num);
+		break;
+		case 4: modifystudent();
+		break;
+		case 5:deletestudent();
+		break;
+		case 6:writebook();
+		break;
+		case 7:displayallb();
+		break;
+		case 8:
+	    {char num[6];
+		clrscr();
+		cout<<"\n\n\tPlease enter book no.";
+		cin>>num;
+		displayspb(num);
+		break;
+		}
+		case 9:modifybook();
+		break;
+		case 10:deletebook();
+		break;
+		case 11:
+		return;
+		default:
+		cout<<"Invalid choice"; 
+	}
+	adminmenu();
+} 
+void main()
+
+{ 
+char ch;
+clrscr();
+start();
+do{
+	clrscr();
+	cout<<"\n\n\n\t MAIN MENU";
+	cout<<"\n\n\n\t1 BOOK ISSUE";
+	cout<<"\n\n\n\t2 BOOK DEPOSIT";
+	cout<<"\n\n\n\t3 ADMINISTRATOR MENU"; 
+	cout<<"\n\n\n\t4 EXIT";
+	cout<<"\n\n\n\t PLEASE SELECT YOUR OPTION(1-4)";  
+	ch=getche();
+	switch(ch)
+	{ case '1': bookissue(); 
+	  break;
+	  case '2': bookdeposit();
+	  break;
+	  case '3': 
+	  adminmenu();
+	  break;
+	  case '4': 
+	  exit(0); 
+	  break;
+	  default:
+	  cout<<"INVALID CHOICE"; 
+	  
+	}         
+}while(ch!=4 ); 
+
+}
+#include <iostream>
+#include <conio.h>
+#include <windows.h>
+using namespace std;
+
+// For game type and game over
+int gameType;
+bool gameOver;
+
+// For box height and width
+const int height = 25;
+const int width = 60;
+
+// For position of smake's head & fruit and for score
+int x, y, fruitX, fruitY, score;
+
+// For all snake's tail parts position
+int tailX[100], tailY[100];
+
+// For tail length
+int nTail;
+
+// For directions for the snake
+enum direction { STOP = 0, LEFT, RIGHT, UP, DOWN };
+direction dir;
+
+// function to create setup for the start of game
+void Setup()
+{
+	// will game have killer or transparent walls
+	cout << "1 | killer walls\n2 | transparent walls\n-->";
+	cin >> gameType;
+
+	// Initial values are set
+	gameOver = false;
+	dir = STOP;
+	x = width / 2;
+	y = height / 2;
+	fruitX = rand() % width;
+	fruitY = rand() % height;
+	score = 0;
+	nTail = 0;
+}
+
+// functions to draw the game
+void Draw()
+{
+	// for moving cursor to pposition (0,0) to overwrite the screen and stop blinking
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0, 0 });
+
+	// for upper wall
+	for (int i = 0; i < width + 2; i++)
+		cout << "\xDC"; // hex code for the lower half block
+
+	cout << endl;
+
+	// for snake's head & tail, side walls, fruit and score
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			// for left walls
+			if (j == 0)
+				cout << "\xDB"; // hex code for the full block
+
+			// for snake's head
+			if (i == y && j == x)
+				cout << "O";
+			// for fruit
+			else if (i == fruitY && j == fruitX)
+				cout << "$";
+			// for snake's tail
+			else
+			{
+				bool print = false;
+				for (int k = 0; k < nTail; k++)
+				{
+					if (tailX[k] == j && tailY[k] == i)
+					{
+						cout << "0";
+						print = true;
+					}
+				}
+				// empty space between the walls
+				if (!print)
+					cout << " ";
+			}
+
+			// for right wall
+			if (j == width - 1)
+				cout << "\xDB";
+		}
+		cout << endl;
+	}
+
+	// for bottom walls
+	for (int i = 0; i < width + 2; i++)
+		cout << "\xDF"; // hex code for the upper half block
+
+	// for score
+	cout << "\nScore = " << score;
+}
+
+// function to control the snake
+void Input()
+{
+	// if keyboard botton is hitted
+	if (_kbhit())
+	{
+		// taking the output from the keyboard
+		switch (_getch())
+		{
+		case 'a':
+			dir = LEFT; // left direction
+			break;
+		case 'd':
+			dir = RIGHT; // right direction
+			break;
+		case 'w':
+			dir = UP; // up direction
+			break;
+		case 's':
+			dir = DOWN; // down direction
+			break;
+		case 'x':
+			gameOver = true; // gameover
+			break;
+		default:   // any other key
+			break;
+		}
+	}
+}
+
+// function for game logic
+void Logic()
+{
+	int prevX = tailX[0];
+	int prevY = tailY[0];
+	int tempX, tempY;
+	tailX[0] = x;
+	tailY[0] = y;
+
+	// for each tails swapping the position of previous tail with it's forward tail
+	for (int i = 1; i < nTail; i++)
+	{
+		tempX = tailX[i];
+		tempY = tailY[i];
+
+		tailX[i] = prevX;
+		tailY[i] = prevY;
+
+		prevX = tempX;
+		prevY = tempY;
+	}
+
+	// making snake walk in the direction according the user
+	switch (dir)
+	{
+	case LEFT:
+		x--;
+		break;
+	case RIGHT:
+		x++;
+		break;
+	case UP:
+		y--;
+		break;
+	case DOWN:
+		y++;
+		break;
+	case 'x':
+		gameOver = true;
+		break;
+	default:
+		break;
+	}
+
+	// for killer walls if snake touch the walls game will over
+	if (gameType == 1)
+	{
+		if (x > width || y > height || x < 0 || y < 0)
+			gameOver = true;
+	}
+
+	// for invisible walls if snake touch the walls game will not over and snake will start walking from opposite walls
+	else if (gameType == 2)
+	{
+		if (x > width)
+			x = 0;
+
+		else if (x < 0)
+			x = width - 1;
+
+		else if (y > height)
+			y = 0;
+
+		else if (y < 0)
+			y = height - 1;
+	}
+
+	// if snake's head touches the snake's tail game will over
+	for (int i = 0; i < nTail; i++)
+	{
+		if (tailX[i] == x && tailY[i] == y)
+			gameOver = true;
+	}
+
+	// each time snake eats the fruit, new fruit generated, score is updated and one extra tail is added
+	if (x == fruitX && y == fruitY)
+	{
+		score += 10;
+		fruitX = rand() % width;
+		fruitY = rand() % height;
+		nTail++;
+	}
+}
+
+int main()
+{
+	system("cls");
+	Setup();
+
+	// running the game
+	while (!gameOver)
+	{
+		Draw();
+		Input();
+		Logic();
+	}
+
+	// Printing final score
+	if (gameOver)
+	{
+		system("cls");
+		cout << "____________GAME OVER____________\n";
+		cout << "      Better Luck Next Time\n";
+		cout << "SCORE: " << score;
+		cout << "\npress 'y' to play again";
+
+		if (_kbhit)
+		{
+			switch (_getch())
+			{
+			case 'y':
+				main();
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	return 0;
+}
+#include <iostream>
+#include <conio.h>
+#include <time.h>
+#include <Windows.h>
+using namespace std;
+
+// for directions of ball and paddles
+enum eDirection{STOP, RIGHT, UPRIGHT, DOWNRIGHT, LEFT, UPLEFT, DOWNLEFT};
+enum eControler{PAUSE, UP, DOWN};
+
+// class for pong ball
+class cBall
+{
+private:
+	int x, y;
+	int originalX, originalY;
+	eDirection dir;
+
+public:
+	// constructor to set starting position & direction of the ball
+	cBall(int posX, int posY)
+	{
+		originalX = posX;
+		originalY = posY;
+		x = posX; y = posY;
+		dir = STOP;
+	}
+	// function to reset the position & direction of ball to the starting position
+	void reset()
+	{
+		x = originalX;
+		y = originalY;
+		dir = STOP;
+	}
+	// function to change direction of the ball
+	void changeDirection(eDirection direction)
+	{
+		dir = direction;
+	}
+	// function to set a random direction to the ball
+	void randomDirection()
+	{
+		srand(time(0));
+		dir = (eDirection)((rand() % 6) + 1);
+	}
+	// functions to get current x and y co-ordinates of the ball
+	inline int getX() { return x; }
+	inline int getY() { return y; }
+	// function to get the current direction of the ball
+	inline int getDir() { return dir; }
+	// function to move the ball according to the direction
+	void move()
+	{
+		switch (dir)
+		{
+		case STOP:
+			break;
+		case RIGHT:
+			x++;
+			break;
+		case UPRIGHT:
+			x++; y--;
+			break;
+		case DOWNRIGHT:
+			x++; y++;
+			break;
+		case LEFT:
+			x--;
+			break;
+		case UPLEFT:
+			x--; y--;
+			break;
+		case DOWNLEFT:
+			x--; y++;
+			break;
+		default:
+			break;
+		}
+	}
+};
+
+// class for the paddles
+class cPaddle
+{
+private:
+	int x, y;
+	int originalX, originalY;
+	eControler joyStick;
+
+public:
+	// constructor to set the position and direction of paddles to the starting position
+	cPaddle(int posX, int posY)
+	{
+		originalX = posX;
+		originalY = posY;
+		x = posX;
+		y = posY;
+		joyStick = PAUSE;
+	}
+	// function to reset the position and direction of the paddles to the starting positions
+	void reset()
+	{
+		x = originalX;
+		y = originalY;
+		joyStick = PAUSE;
+	}
+	// functions to get current x and y co-ordinates of the paddles
+	inline int getX() { return x; }
+	inline int getY() { return y; }
+	// function to get current direction of paddles
+	void changeDirection(eControler dir) { joyStick = dir; }
+	void move()
+	{
+		switch (joyStick)
+		{
+		case UP:
+			y--;
+			break;
+		case DOWN:
+			y++;
+			break;
+		case PAUSE:
+			break;
+		default:
+			break;
+		}
+	}
+};
+
+// class to manage the game
+class cGameManager
+{
+private:
+	int width, height;
+	int score1, score2;
+	bool quit;
+	// dynamically initializing ball, player1 & player2
+	cBall* ball;
+	cPaddle* player1;
+	cPaddle *player2;
+
+public:
+	// constructor to set the height, width of the box and starting positions
+	cGameManager()
+	{
+		quit = false;
+		height = 15; width = 50;
+		score1 = score2 = 0;
+		ball = new cBall(width / 2, height / 2);
+		player1 = new cPaddle(1, height / 2);
+		player2 = new cPaddle(width - 2, height / 2);
+	}
+	// destructor to delete dynamically created class objects
+	~cGameManager()
+	{
+		delete ball, player1, player2;
+	}
+	// function to increasing score then reset to starting positions
+	void ScoreUp(cPaddle* player)
+	{
+		if (player == player1)
+			score1++;
+		else if (player == player2)
+			score2++;
+
+		ball->reset();
+		player1->reset();
+		player2->reset();
+	}
+	// function to draw the layout of the box
+	void Draw()
+	{
+		// to set cursor to the position (0,0) of the screen to overwrite all things and stop blinking of the screen
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0, 0 });
+
+		// top wall
+		for (int i = 0; i < width + 2; i++)
+			cout << "\xB2";
+		cout << endl;
+
+		// right and left walls
+		for (int i = 0; i < height; i++)
+		{
+			for (int j = 0; j < width; j++)
+			{
+				int ballX = ball->getX();
+				int ballY = ball->getY();
+				int player1x = player1->getX();
+				int player1y = player1->getY();
+				int player2x = player2->getX();
+				int player2y = player2->getY();
+
+				if (j == 0)
+					cout << "\xB1";
+
+				// ball, right and left paddle
+				if (ballX == j && ballY == i)
+					cout << "o";
+				else if (player1x == j && (player1y >= i && player1y < i + 4))
+					cout << "\xDB";
+				else if (player2x == j && (player2y >= i && player2y < i + 4))
+					cout << "\xDB";
+				else
+					cout << " ";
+
+				if (j == width - 1)
+					cout << "\xB1";
+			}
+			cout << endl;
+		}
+		
+		// bottom wall
+		for (int i = 0; i < width + 2; i++)
+			cout << "\xB2";
+		cout << endl;
+
+		// score
+		for (int i = 0; i < width / 2 - 3; i++)
+			cout << " ";
+		cout << score1 << " : " << score2 << endl;
+	}
+	// function to control the paddles
+	void Input()
+	{
+		int player1y = player1->getY();
+		int player2y = player2->getY();
+
+		if (_kbhit())
+		{
+			// if any key is pressed game will start
+			if (ball->getDir() == STOP)
+				ball->randomDirection();
+
+			switch (_getch())
+			{
+			case 'w':
+				if (player1y - 3 > 0) // if paddle not hit the top wall
+					player1->changeDirection(UP);
+				break;
+			case 's':
+				if (player1y + 1 < height) // if paddle not hit the bottom wall
+					player1->changeDirection(DOWN);
+				break;
+			case 'i':
+				if (player2y - 3 > 0) // if paddle not hit the top wall
+					player2->changeDirection(UP);
+				break;
+			case 'j':
+				if (player2y + 1 < height) // if paddle not hit the bottom wall
+					player2->changeDirection(DOWN);
+				break;
+			case 'q':
+				quit = true;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	// function for the logic of the game
+	void Logic()
+	{
+		// moving ball and paddles
+		ball->move();
+		player1->move();
+		player2->move();
+
+		// getting the positions of ball and paddles
+		int ballX = ball->getX();
+		int ballY = ball->getY();
+		int player1x = player1->getX();
+		int player1y = player1->getY();
+		int player2x = player2->getX();
+		int player2y = player2->getY();
+
+		// reflecting direction of ball of ball hits the paddle
+		if (ballX == player1x + 1)
+		{
+			if (ballY == player1y - 3)
+				ball->changeDirection(UPRIGHT);
+			else if (ballY == player1y - 2 || ballY == player1y - 1)
+				ball->changeDirection((eDirection)(rand()%3 + 1)); // random right directions
+			else if (ballY == player1y)
+				ball->changeDirection(DOWNRIGHT);
+		}
+		else if (ballX == player2x - 1)
+		{
+			if (ballY == player2y - 3)
+				ball->changeDirection(UPLEFT);
+			else if (ballY == player2y - 2 || ballY == player2y - 1)
+				ball->changeDirection((eDirection)(rand() % 3 + 4)); // random left directions
+			else if (ballY == player2y)
+				ball->changeDirection(DOWNLEFT);
+		}
+
+		// reflecting ball direction of ball if ball hits the top or bottom wall 
+		// and increasing score of player if ball goes through the right or left wall
+		if (ballY == height - 1)
+			ball->changeDirection(ball->getDir() == DOWNRIGHT ? UPRIGHT : UPLEFT);
+		else if (ballY == 0)
+			ball->changeDirection(ball->getDir() == UPRIGHT ? DOWNRIGHT : DOWNLEFT);
+		else if (ballX == width - 1)
+			ScoreUp(player1);
+		else if (ballX == 0)
+			ScoreUp(player2);
+
+		// stop moving paddle if any paddle hits the top or bottom wall
+		if (player1y - 4 < 0)
+			player1->changeDirection(PAUSE);
+		else if (player1y + 2 > height)
+			player1->changeDirection(PAUSE);
+		
+		if (player2y - 4 < 0)
+			player2->changeDirection(PAUSE);
+		else if (player2y + 2 > height)
+			player2->changeDirection(PAUSE);
+
+		// gameOver if any player scored 10 points
+		if (score1 == 10)
+			quit = true;
+		else if (score2 == 10)
+			quit = true;
+	}
+	// function to setup the game	
+	void Game()
+	{
+		string p1, p2;
+		cout << "Player1: ";
+		cin >> p1;
+		cout << "Player2: ";
+		cin >> p2;
+
+		while (!quit)
+		{
+			Draw();
+			Input();
+			Logic();
+		}
+		
+		if (score1 != score2)
+			score1 > score2 ? cout << p1 << " Won" : cout << p2 << " Won";
+		else
+			cout << "Tie";
+	}
+};
+
+int main()
+{
+	cGameManager c;
+	c.Game();
+	return 0;
+}#include<fstream>
+#include<iostream>
+#include<conio.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+using namespace std;
+class hospital
+    {
+    int pid;
+    char pname[50];
+    char fname[50];
+    char mname[50];
+    char hname[50];
+    char ren[50];
+    char rer[50];
+    char gen[50];
+    float age;
+    char mob[50];
+    char status[50];
+
+    public:
+    void in()
+    {
+        _cprintf("Please enter the informations respectively : ");
+        cout<<endl<<endl;
+        _cprintf("Please enter patient's id : ");
+        cout<<endl;
+        cin>>pid;
+        _cprintf("Please enter patient's name : ");
+        cout<<endl;
+        cin>>pname;
+        _cprintf("Please enter patient's  age : ");
+        cout<<endl;
+        cin>>age;
+        _cprintf("Please enter patient's  gender : ");
+        cout<<endl;
+        cin>>gen;
+        _cprintf("Is patient is married or not ?");
+        cout<<endl;
+        cin>>status;
+        if(strcmpi(gen,"female")==0)
+        {
+            if(strcmpi(status,"yes")==0)
+            {
+                _cprintf("Please enter patient's  husband's name : ");
+                cout<<endl;
+                cin>>hname;
+            }
+            else if(strcmpi(status,"no")==0)
+            {
+                _cprintf("Please enter patient's father name : ");
+                cout<<endl;
+                cin>>fname;
+                _cprintf("Please enter patient's  mother name : ");
+                cout<<endl;
+                cin>>mname;
+            }
+        }
+        else
+        {
+            _cprintf("Please enter patient's father name : ");
+            cout<<endl;
+            cin>>fname;
+            _cprintf("Please enter the name of person who reffered the patient : ");
+            cout<<endl;
+            cin>>ren;
+            _cprintf("Please enter the relation of person who reffered the patient : ");
+            cout<<endl;
+            cin>>rer;
+            _cprintf("Please enter the mobile number : ");
+            cout<<endl;
+            cin>>mob;
+        }
+    }
+    void out()
+    {
+        cout<<endl;
+        _cprintf("Patient's id : ");
+        cout<<pid;
+        cout<<endl;
+        _cprintf("Patient's name : ");
+        cout<<pname;
+        cout<<endl;
+        _cprintf("Patient's  age : ");
+        cout<<age;
+        cout<<endl;
+        _cprintf("Patient's  gender : ");
+        cout<<gen;
+        cout<<endl;
+        _cprintf("Patient's married status : ");
+        cout<<status;
+        cout<<endl;
+        if(strcmpi(gen,"female")==0)
+        {
+            if(strcmpi(status,"yes")==0)
+            {
+                _cprintf("Patient's  husband's name : ");
+                cout<<hname;
+                cout<<endl;
+            }
+            else if(strcmpi(status,"no")==0)
+            {
+                _cprintf("Patient's father name : ");
+                cout<<fname;
+                cout<<endl;
+                _cprintf("Patient's  mother name : ");
+                cout<<mname;
+                cout<<endl;
+            }
+        }
+        else
+        {
+            _cprintf("Patient's father name : ");
+            cout<<fname;
+            cout<<endl;
+            _cprintf("Refferer's name : ");
+            cout<<ren;
+            cout<<endl;
+            _cprintf("Refferer's relation : ");
+            cout<<rer;
+            cout<<endl;
+            _cprintf("Mobile number : ");
+            cout<<mob;
+            cout<<endl;
+        }
+    }
+    int record()
+    {
+        return pid;
+    }
+    void update()
+    {
+        char choice1[20];
+        char choice2[20];
+        char pn[50];
+        char hn[50];
+        char fn[50];
+        char mn[50];
+        char phone[50];
+        char state[50];
+        _cprintf("Do you want to really change the record (YES or NO) : ");
+        cout<<endl;
+        cin>>choice1;
+        if(strcmpi(choice1,"yes")==0)
+        {
+            _cprintf("What do you want to change(patient's(name,father's name,husband's name,mother's name,age,phone number,status of marriage) : ");
+            cout<<endl;
+            cin>>choice2;
+            cout<<endl;
+            if(strcmpi(choice2,"pname")==0)
+            {
+                _cprintf("Enter the new patient's name: ");
+                cout<<endl;
+                cin>>pn;
+                strcpy(pname,pn);
+            }
+            else if(strcmpi(choice2,"fname")==0)
+            {
+                _cprintf("Enter the new father's name : ");
+                cout<<endl;
+                cin>>fn;
+                strcpy(pname,fn);
+            }
+            else if(strcmpi(choice2,"hname")==0)
+            {
+                _cprintf("Enter the new husband's name : ");
+                cout<<endl;
+                cin>>hn;
+                strcpy(fname,hn);
+            }
+            else if(strcmpi(choice2,"mname")==0)
+            {
+                _cprintf("Enter the new mother's name : ");
+                cout<<endl;
+                cin>>mn;
+                strcpy(mname,mn);
+            }
+            else if(strcmpi(choice2,"phone")==0)
+            {
+                _cprintf("Enter the new phone number : ");
+                cout<<endl;
+                cin>>phone;
+                strcpy(mob,phone);
+            }
+            else if(strcmpi(choice2,"state")==0)
+            {
+                _cprintf("Enter the new state : ");
+                cout<<endl;
+                cin>>state;
+                strcpy(status,state);
+            }
+        }
+        else
+        exit(0);
+    }
+}h;
+void add()
+{
+    cout<<"\nNO SPACES ARE ALLOWED\n";
+    fstream file("hospital.dat",ios::binary|ios::out|ios::app);
+    h.in();
+    file.write((char*)&h,sizeof(h));
+}
+void show()
+{
+    fstream file("hospital.dat",ios::binary|ios::in);
+    file.seekg(0);
+    while(!file.eof())
+    {
+        file.read((char*)&h,sizeof(h));
+        if(file.eof())
+        break;
+        else
+        h.out();
+    }
+    file.close();
+}
+void search()
+{
+    ifstream file("hospital.dat",ios::binary|ios::in|ios::out);
+    file.seekg(0);
+    int id;
+    _cprintf("Enter the patient's id you want to search : ");
+    cout<<endl;
+    cin>>id;
+    while(!file.eof())
+    {
+        file.read((char*)&h,sizeof(h));
+        if(file.eof())
+        break;
+        else if(h.record()==id)
+        h.out();
+    }
+    file.close();
+}
+void transpose()
+{
+    ofstream ifile("hos.dat",ios::binary|ios::in|ios::out);
+    ifstream file("hospital.dat",ios::binary|ios::in|ios::out);
+    file.seekg(0);
+    int id1;
+    int id2;
+    _cprintf("Enter the patient's id in range you want to transpose : ");
+    cout<<endl<<endl;
+    _cprintf("Enter the patient's primary id number for range (x-) : ");
+    cout<<endl;
+    cin>>id1;
+    _cprintf("Enter the patient's secondry id number for range (-x) : ");
+    cout<<endl;
+    cin>>id2;
+    while(!file.eof())
+    {
+        file.read((char*)&h,sizeof(h));
+        if(file.eof())
+        break;
+        else if(h.record()>=id1&&h.record()<=id2)
+        ifile.write((char*)&h,sizeof(h));
+    }
+    file.close();
+    ifile.close();
+}
+void del()
+{
+    ofstream ifile("hos.dat",ios::binary|ios::in|ios::out);
+    ifstream file("hospital.dat",ios::binary|ios::in|ios::out);
+    file.seekg(0);
+    int id;
+    _cprintf("Enter the patient's id want to delete : ");
+        cout<<endl;
+    cin>>id;
+    while(!file.eof())
+    {
+        file.read((char*)&h,sizeof(h));
+        if(file.eof())
+        break;
+        else if(h.record()==id)
+        h.out();
+        else
+        ifile.write((char*)&h,sizeof(h));
+    }
+    file.close();
+    ifile.close();
+    remove("hospital.dat");
+    rename("hos.dat","hospital.dat");
+}
+void shot()
+{
+    _cprintf("The transpose id is : ");
+    cout<<endl;
+    fstream ifile("hos.dat",ios::binary|ios::in|ios::out);
+    while(!ifile.eof())
+    {
+        ifile.read((char*)&h,sizeof(h));
+        if(ifile.eof())
+        break;
+        else
+        h.out();    
+    }
+    ifile.close();
+}
+void erase()
+{
+    char choice[10];
+    _cprintf("Do you really wants to erase all record");
+    cout<<endl;
+    cin>>choice;
+    if(strcmpi(choice,"yes")==0);
+    {
+        fstream file("hospital.dat",ios::binary|ios::out|ios::trunc);
+        file.write((char*)&h,sizeof(h));
+        file.close();
+    }
+    _cprintf("Your record is erased");
+    cout<<endl;
+}
+void modify()
+{
+    fstream file("hospital.dat",ios::binary|ios::in|ios::out);
+    int id;
+    _cprintf("Enter the patient's id want to modify/change : ");
+    cout<<endl;
+    cin>>id;
+    int l;
+    while(!file.eof())
+    {
+        l=file.tellp();
+        file.read((char*)&h,sizeof(h));
+        if(h.record()==id)
+        {
+            file.seekg(l);
+            h.update();
+            file.write((char*)&h,sizeof(h));
+        }
+        file.close();
+    }
+}
+int main()
+{
+    char ch;
+    char ch1;
+    while(1)
+    {
+        _cprintf("_______________________________________________________________________________");
+        cout<<endl;
+        _cprintf("                                 Press Y to continue : ");
+        cout<<endl;
+        _cprintf("_______________________________________________________________________________");
+        cout<<" ";
+        cin>>ch;
+        if(ch=='Y'||ch=='y')
+        {
+            _cprintf("________________________________________");
+            cout<<endl;
+            _cprintf(" Press 1 to add the record.            |");
+            cout<<endl;
+            _cprintf(" Press 2 to display the records.       |");
+            cout<<endl;
+            _cprintf(" Press 3 to search the record.         |");
+            cout<<endl;
+            _cprintf(" Press 4 to transpose the record.      |");
+            cout<<endl;
+            _cprintf(" Press 5 to show transposed record.    |");
+            cout<<endl;
+            _cprintf(" Press 6 to delete the record.         |");
+            cout<<endl;
+            _cprintf(" Press 7 to clear the record.          |");
+            cout<<endl;
+            _cprintf(" Press 8 to modify the record.         |");
+            cout<<endl;
+            _cprintf(" Press 9 for exit.                     |");
+            cout<<endl;
+            _cprintf("_______________________________________|");
+            cout<<endl;
+            cout<<endl;
+            _cprintf("--------------------------------Enter your choice-------------------------------");
+            cout<<endl;
+            cin>>ch1;
+            switch(ch1)
+            {
+                case '1':_lrotr;
+	                     add();
+	                     break;
+                case '2':_lrotr;
+	                     show();
+	                     break;
+                case '3':_lrotr;
+	                     search();
+	                     break;
+                case '4':_lrotr;
+	                     transpose();
+	                     break;
+                case '5':_lrotr;
+	                     shot();
+	                     break;
+                case '6':_lrotr;
+	                     del();
+	                     break;
+                case '7':_lrotr;
+	                     erase();
+	                     break;
+                case '8':_lrotr;
+	                     modify();
+	                     break;
+                case '9':_lrotr;
+	                     exit(0);
+            }
+        }
+    }
+    system("pause");
+    return 0;
+}
+#include<iostream>
+#include<conio.h>
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+#include<stdlib.h>
+using namespace std;
+struct future
+{
+float age;
+char name[50];
+char rashi[25];
+char ratan[25];
+char day[25];
+char dhatu[25];
+char quantity[25];
+
+
+void enter()
+{
+_cprintf("                               Future Calculator");
+cout<<endl;
+_cprintf("For seeing your future please give informations respectively : ");
+cout<<endl;
+_cprintf("Enter your Age : ");
+cin>>age;
+_cprintf("Enter your Name : ");
+cin>>name;
+cout<<endl;
+_cprintf("Your future is calculating");
+cout<<endl<<endl;
+}
+
+void display()
+{
+_cprintf("Your rashi/horoscope is : ");
+cout<<rashi;
+cout<<endl;
+_cprintf("Your lucky dinank/day is : ");
+cout<<day;
+cout<<endl;
+_cprintf("Your lucky dhatu/metal is : ");
+cout<<dhatu;
+cout<<endl;
+_cprintf("Your lucky ratan is : ");
+cout<<ratan;
+cout<<endl;
+_cprintf("Your lucky weight for ratan is : ");
+cout<<quantity;
+cout<<endl;
+}
+
+void getcalc();
+};
+
+void future::getcalc()
+{
+int x=strlen(name);
+for(int i=0;i<=x;i++)
+{
+if(name[0]=='c'&&name[1]=='h'&&name[2]=='u')
+{
+strcpy(rashi,"Aries (Mesh)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Ashit Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='c'&&name[1]=='h'&&name[2]=='e')
+{
+strcpy(rashi,"Aries (Mesh)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Ashit Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='c'&&name[1]=='h'&&name[2]=='o')
+{
+strcpy(rashi,"Aries (Mesh)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Ashit Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='l'&&name[1]=='a')
+{
+strcpy(rashi,"Aries (Mesh)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Ashit Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='l'&&name[1]=='e')
+{
+strcpy(rashi,"Aries (Mesh)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Ashit Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='l'&&name[1]=='i')
+{
+strcpy(rashi,"Aries (Mesh)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Ashit Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='l'&&name[1]=='u')
+{
+strcpy(rashi,"Aries (Mesh)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Ashit Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='l'&&name[1]=='o')
+{
+strcpy(rashi,"Aries (Mesh)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Ashit Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='a')
+{
+strcpy(rashi,"Aries (Mesh)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Ashit Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='e')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='u')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='e'&&name[1]=='e')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='o')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='v')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='v'&&name[1]=='a')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='v'&&name[1]=='i')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='v'&&name[1]=='u')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='v'&&name[1]=='a'&&name[2]=='y')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='v'&&name[1]=='o')
+{
+strcpy(rashi,"Taurus (vrish)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='k'&&name[1]=='a')
+{
+strcpy(rashi,"Gemini (Mithun)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wednesday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='k'&&name[1]=='i')
+{
+strcpy(rashi,"Gemini (Mithun)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wednesday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='k'&&name[1]=='u')
+{
+strcpy(rashi,"Gemini (Mithun)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wednesday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='g'&&name[1]=='h')
+{
+strcpy(rashi,"Gemini (Mithun)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wednesday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='a'&&name[1]=='n'&&name[2]=='g')
+{
+strcpy(rashi,"Gemini (Mithun)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wednesday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='c'&&name[1]=='h'&&name[2]=='h')
+{
+strcpy(rashi,"Gemini (Mithun)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wednesday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='k'&&name[1]=='e')
+{
+strcpy(rashi,"Gemini (Mithun)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wednesday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='k'&&name[1]=='o')
+{
+strcpy(rashi,"Gemini (Mithun)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wednesday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='h'&&name[1]=='a')
+{
+strcpy(rashi,"Gemini (Mithun)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wednesday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='h'&&name[1]=='i')
+{
+strcpy(rashi,"Cancer (Kark)");
+strcpy(ratan,"Pearl (Moti)");
+strcpy(day,"Monday (Somwar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='h'&&name[1]=='u')
+{
+strcpy(rashi,"Cancer (Kark)");
+strcpy(ratan,"Pearl (Moti)");
+strcpy(day,"Monday (Somwar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='h'&&name[1]=='e')
+{
+strcpy(rashi,"Cancer (Kark)");
+strcpy(ratan,"Pearl (Moti)");
+strcpy(day,"Monday (Somwar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='h'&&name[1]=='o')
+{
+strcpy(rashi,"Cancer (Kark)");
+strcpy(ratan,"Pearl (Moti)");
+strcpy(day,"Monday (Somwar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='d'&&name[1]=='a')
+{
+strcpy(rashi,"Cancer (Kark)");
+strcpy(ratan,"Pearl (Moti)");
+strcpy(day,"Monday (Somwar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='d'&&name[1]=='i')
+{
+strcpy(rashi,"Cancer (Kark)");
+strcpy(ratan,"Pearl (Moti)");
+strcpy(day,"Monday (Somwar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='d'&&name[1]=='u')
+{
+strcpy(rashi,"Cancer (Kark)");
+strcpy(ratan,"Pearl (Moti)");
+strcpy(day,"Monday (Somwar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='d'&&name[1]=='e')
+{
+strcpy(rashi,"Cancer (Kark)");
+strcpy(ratan,"Pearl (Moti)");
+strcpy(day,"Monday (Somwar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='d'&&name[1]=='o')
+{
+strcpy(rashi,"Cancer (Kark)");
+strcpy(ratan,"Pearl (Moti)");
+strcpy(day,"Monday (Somwar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='m'&&name[1]=='a')
+{
+strcpy(rashi,"Leo (Singh)");
+strcpy(ratan,"Ruby (Manik)");
+strcpy(day,"Sunday (Raviwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='m'&&name[1]=='i')
+{
+strcpy(rashi,"Leo (Singh)");
+strcpy(ratan,"Ruby (Manik)");
+strcpy(day,"Sunday (Raviwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='m'&&name[1]=='u')
+{
+strcpy(rashi,"Leo (Singh)");
+strcpy(ratan,"Ruby (Manik)");
+strcpy(day,"Sunday (Raviwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='m'&&name[1]=='e')
+{
+strcpy(rashi,"Leo (Singh)");
+strcpy(ratan,"Ruby (Manik)");
+strcpy(day,"Sunday (Raviwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='m'&&name[1]=='o')
+{
+strcpy(rashi,"Leo (Singh)");
+strcpy(ratan,"Ruby (Manik)");
+strcpy(day,"Sunday (Raviwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='a')
+{
+strcpy(rashi,"Leo (Singh)");
+strcpy(ratan,"Ruby (Manik)");
+strcpy(day,"Sunday (Raviwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='i')
+{
+strcpy(rashi,"Leo (Singh)");
+strcpy(ratan,"Ruby (Manik)");
+strcpy(day,"Sunday (Raviwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='u')
+{
+strcpy(rashi,"Leo (Singh)");
+strcpy(ratan,"Ruby (Manik)");
+strcpy(day,"Sunday (Raviwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='e')
+{
+strcpy(rashi,"Leo (Singh)");
+strcpy(ratan,"Ruby (Manik)");
+strcpy(day,"Sunday (Raviwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='o')
+{
+strcpy(rashi,"Virgo (Kanya)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wedneday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='p'&&name[1]=='a')
+{
+strcpy(rashi,"Virgo (Kanya)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wedneday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='p'&&name[1]=='i')
+{
+strcpy(rashi,"Virgo (Kanya)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wedneday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='p'&&name[1]=='u')
+{
+strcpy(rashi,"Virgo (Kanya)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wedneday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='s'&&name[1]=='h')
+{
+strcpy(rashi,"Virgo (Kanya)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wedneday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='n'&&name[1]=='a')
+{
+strcpy(rashi,"Virgo (Kanya)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wedneday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='h')
+{
+strcpy(rashi,"Virgo (Kanya)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wedneday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='p'&&name[1]=='e')
+{
+strcpy(rashi,"Virgo (Kanya)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wedneday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='p'&&name[1]=='o')
+{
+strcpy(rashi,"Virgo (Kanya)");
+strcpy(ratan,"Emerald (Panna)");
+strcpy(day,"Wedneday (Bhudhwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='r'&&name[1]=='a')
+{
+strcpy(rashi,"Libra (Tula)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='r'&&name[1]=='i')
+{
+strcpy(rashi,"Libra (Tula)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='r'&&name[1]=='u')
+{
+strcpy(rashi,"Libra (Tula)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='r'&&name[1]=='e')
+{
+strcpy(rashi,"Libra (Tula)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='r'&&name[1]=='o')
+{
+strcpy(rashi,"Libra (Tula)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='a')
+{
+strcpy(rashi,"Libra (Tula)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='i')
+{
+strcpy(rashi,"Libra (Tula)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='u')
+{
+strcpy(rashi,"Libra (Tula)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='e')
+{
+strcpy(rashi,"Libra (Tula)");
+strcpy(ratan,"Opel (Opel)");
+strcpy(day,"Friday (Shukrawar)");
+strcpy(dhatu,"Asht Dhatu and Silver");
+strcpy(quantity,"8-11 ct");
+}
+else if(name[0]=='t'&&name[1]=='o')
+{
+strcpy(rashi,"Scorpio (Vrishchik)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='n'&&name[1]=='a')
+{
+strcpy(rashi,"Scorpio (Vrishchik)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='n'&&name[1]=='i')
+{
+strcpy(rashi,"Scorpio (Vrishchik)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='n'&&name[1]=='u')
+{
+strcpy(rashi,"Scorpio (Vrishchik)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='n'&&name[1]=='e')
+{
+strcpy(rashi,"Scorpio (Vrishchik)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='n'&&name[1]=='o')
+{
+strcpy(rashi,"Scorpio (Vrishchik)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='y'&&name[1]=='a')
+{
+strcpy(rashi,"Scorpio (Vrishchik)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='y'&&name[1]=='i')
+{
+strcpy(rashi,"Scorpio (Vrishchik)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='u')
+{
+strcpy(rashi,"Scorpio (Vrishchik)");
+strcpy(ratan,"Coral (Moonga)");
+strcpy(day,"Tuesday (Mangalwar)");
+strcpy(dhatu,"Asht Dhatu");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='y'&&name[1]=='e')
+{
+strcpy(rashi,"Sagittarius (Dhanu)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thursday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='y'&&name[1]=='o')
+{
+strcpy(rashi,"Sagittarius (Dhanu)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thursday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='b'&&name[1]=='h'&&name[2]=='a')
+{
+strcpy(rashi,"Sagittarius (Dhanu)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thursday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='b'&&name[1]=='h'&&name[2]=='i')
+{
+strcpy(rashi,"Sagittarius (Dhanu)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thursday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='b'&&name[1]=='h'&&name[2]=='u')
+{
+strcpy(rashi,"Sagittarius (Dhanu)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thursday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='d'&&name[1]=='h'&&name[2]=='a')
+{
+strcpy(rashi,"Sagittarius (Dhanu)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thursday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='f'&&name[1]=='a')
+{
+strcpy(rashi,"Sagittarius (Dhanu)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thursday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='d'&&name[1]=='h'&&name[2]=='a')
+{
+strcpy(rashi,"Sagittarius (Dhanu)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thursday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='b'&&name[1]=='h'&&name[2]=='e')
+{
+strcpy(rashi,"Sagittarius (Dhanu)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thursday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='b'&&name[1]=='h'&&name[2]=='o')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='j'&&name[1]=='a')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='k'&&name[1]=='h'&&name[2]=='i')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='k'&&name[1]=='h'&&name[2]=='u')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='k'&&name[1]=='h'&&name[2]=='e')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='k'&&name[1]=='h'&&name[2]=='o')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='b'&&name[1]=='h'&&name[2]=='i')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='j'&&name[1]=='a')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='k'&&name[1]=='h')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='j'&&name[1]=='i')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='g'&&name[1]=='a')
+{
+strcpy(rashi,"Capricom (Makkar)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='g'&&name[1]=='u')
+{
+strcpy(rashi,"Aguarius (Kumbh)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='g'&&name[1]=='a'&&name[2]=='y')
+{
+strcpy(rashi,"Aguarius (Kumbh)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='g'&&name[1]=='o')
+{
+strcpy(rashi,"Aguarius (Kumbh)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='s'&&name[1]=='a')
+{
+strcpy(rashi,"Aguarius (Kumbh)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='s'&&name[1]=='i')
+{
+strcpy(rashi,"Aguarius (Kumbh)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='s'&&name[1]=='u')
+{
+strcpy(rashi,"Aguarius (Kumbh)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='s')
+{
+strcpy(rashi,"Aguarius (Kumbh)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='s'&&name[1]=='o')
+{
+strcpy(rashi,"Aguarius (Kumbh)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='d'&&name[1]=='a')
+{
+strcpy(rashi,"Aguarius (Kumbh)");
+strcpy(ratan,"Blue Sapphire (Neelam)");
+strcpy(day,"Saturday (Shaniwar)");
+strcpy(dhatu,"Panch Dhatu and Silver");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='d'&&name[1]=='i')
+{
+strcpy(rashi,"Pisces (Miet)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thrusday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='d'&&name[1]=='u')
+{
+strcpy(rashi,"Pisces (Miet)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thrusday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='t'&&name[1]=='h')
+{
+strcpy(rashi,"Pisces (Miet)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thrusday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='j'&&name[1]=='h')
+{
+strcpy(rashi,"Pisces (Miet)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thrusday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='y'&&name[1]=='n')
+{
+strcpy(rashi,"Pisces (Miet)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thrusday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='d'&&name[1]=='e')
+{
+strcpy(rashi,"Pisces (Miet)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thrusday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='d'&&name[1]=='o')
+{
+strcpy(rashi,"Pisces (Miet)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thrusday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='c'&&name[1]=='h'&&name[2]=='a')
+{
+strcpy(rashi,"Pisces (Miet)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thrusday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else if(name[0]=='c'&&name[1]=='h'&&name[2]=='i')
+{
+strcpy(rashi,"Pisces (Miet)");
+strcpy(ratan,"Yellow Sapphire (Pukhraj)");
+strcpy(day,"Thrusday (Guruwar)");
+strcpy(dhatu,"Asht Dhatu and Gold");
+strcpy(quantity,"6-8 ct");
+}
+else
+{
+strcpy(rashi,"No details found !");
+strcpy(ratan,"No details found !");
+strcpy(day,"No details found !");
+strcpy(dhatu,"No details found !");
+strcpy(quantity,"No details found !");
+}
+}
+}
+
+int main()
+{
+    int x=1;
+    while(x!=0)
+    {
+        if(x==0)
+        {
+            cout<<"\nSorry for inconvenience";
+        }
+        else 
+        {
+            future f;
+            f.enter();
+            f.getcalc();
+            f.display();
+        }
+        cout<<endl;
+        cout<<"\t\t\t\t\t\t\t..........................."<<endl;
+        cout<<"\t\t\t\t\t\t\t..... press 0 to exit ....."<<endl;
+        cout<<"\t\t\t\t\t\t\t..........................."<<endl;
+        cin>>x;
+    }
+    return (0);
+}
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <conio.h>
+#include <time.h>
+#include <Windows.h>
+
+using namespace std;
+
+class Hangman
+{
+private:
+	int guessCount;
+	bool gameOver;
+	string guessedWord;
+	string wordToGuess;
+public:
+	Hangman()
+	{
+		guessCount = 0;
+		gameOver = true;
+		guessedWord = "";
+		wordToGuess = "";
+	}
+	void PrintMessage(string message, bool printTop = true, bool printBottom = true)
+	{
+		if (printTop)
+		{
+			cout << "+------------------------------------+" << endl;
+			cout << "|";
+		}
+		else
+			cout << "|";
+		bool flag = true;
+		for (int i = message.length(); i < 36; i++)
+		{
+			if (flag)
+				message = message + " ";
+			else if (!flag)
+				message = " " + message;
+
+			flag = !flag;
+		}
+		cout << message;
+		if (printBottom)
+		{
+			cout << "|" << endl;
+			cout << "+------------------------------------+" << endl;
+		}
+		else
+			cout << "|" << endl;
+	}
+	void DrawHangman()
+	{
+		if (guessCount >= 1)
+			PrintMessage("!", 0, 0);
+		else
+			PrintMessage("", 0, 0);
+
+		if (guessCount >= 2)
+			PrintMessage("!", 0, 0);
+		else
+			PrintMessage("", 0, 0);
+
+		if (guessCount == 10)
+			PrintMessage("@", 0, 0);
+		else if (guessCount >= 3)
+			PrintMessage("O", 0, 0);
+		else
+			PrintMessage("", 0, 0);
+
+		if (guessCount == 4)
+			PrintMessage("|", 0, 0);
+		else if (guessCount == 5)
+			PrintMessage("\\| ", 0, 0);
+
+		if (guessCount >= 6)
+			PrintMessage("\\|/", 0, 0);
+		else
+			PrintMessage("", 0, 0);
+
+		if (guessCount >= 7)
+			PrintMessage("|", 0, 0);
+		else
+			PrintMessage("", 0, 0);
+
+		if (guessCount == 8)
+			PrintMessage("/  ", 0, 0);
+
+		if (guessCount >= 9)
+			PrintMessage("/ \\", 0, 0);
+		else
+			PrintMessage("", 0, 0);
+	}
+	void RandomWord(string path = "words.txt")
+	{
+		srand(time(0));
+		vector<string> v;
+		ifstream file(path);
+
+		if (file.is_open())
+			while (getline(file, wordToGuess))
+				v.push_back(wordToGuess);
+		file.close();
+
+		wordToGuess = v.at(rand() % v.size());
+	}
+	void PrintLetters(char from, char to)
+	{
+		string S;
+		for (char i = from; i <= to; i++)
+		{
+			if (guessedWord.find(i) == string::npos)
+			{
+				S += i;
+				S += " ";
+			}
+			else
+			{
+				S += "  ";
+			}
+		}
+		PrintMessage(S, 0, 0);
+	}
+	void RemainingLetters()
+	{
+		PrintMessage("REMAINING LETTERS");
+		PrintLetters('a', 'm');
+		PrintLetters('n', 'z');
+	}
+	void PrintWord()
+	{
+		PrintMessage("GUESS THE WORD");
+		string S;
+		for (int i = 0; i < wordToGuess.length(); i++)
+		{
+			if (guessedWord.find(wordToGuess[i]) == string::npos)
+			{
+				gameOver = false;
+				S += "_ ";
+			}
+			else
+			{
+				S += wordToGuess[i];
+				S += " ";
+			}
+		}
+		PrintMessage(S, 0);
+	}
+	void CountGuess(string newGuess)
+	{
+		for (int i = 0; i < newGuess.length(); i++)
+			if (wordToGuess.find(newGuess[i]) == string::npos)
+				guessCount++;
+	}
+	void Setup()
+	{
+		RandomWord();
+		do
+		{
+			system("cls");
+			PrintMessage("MADE BY SIDHARTH");
+			DrawHangman();
+			RemainingLetters();
+			PrintWord();
+
+			string ch;
+			cout << ">"; cin >> ch;
+			if (guessedWord.find(ch) == string::npos)
+			{
+				guessedWord += ch;
+				CountGuess(ch);
+			}
+
+			if (gameOver)
+				break;
+
+			if (_kbhit())
+			{
+				char ch = _getch();
+				if (ch == '0')
+					break;
+			}
+
+		} while (guessCount < 10);
+
+		if (gameOver)
+			cout << "You Win" << endl;;
+		
+		cout << "WORD: " << wordToGuess << endl;
+		cout << "Game Over" << endl;;
+	}
+};
+
+int main()
+{
+	Hangman h;
+	h.Setup();
+	return 0;
+}
+#include "Header.h"
+
+int main()
+{
+	srand(time(0));
+	::available = rand() % 200000;
+	MainMenu();
+
+	system("color 9E");
+	system("pause");
+	return 0;
+}
+
+void MainMenu()
+{
+	system("color 9E");
+	char num;
+	char choice;
+	do
+	{
+
+		bool checked = false;
+		string checkName, checkPassword;
+		accounts data;
+		accounts oldData[50];
+		cout << "\n          Choose what you want:";
+		cout << "\n          1.Sign in";
+		cout << "\n          2.Registration";
+		cout << "\n          3.Exit";
+		cout << "\n          ";
+		choice = _getch();
+		switch (choice)
+		{
+		case 49:
+			outData(oldData);
+			system("CLS");
+			cout << "\n          Please enter your name:";
+			cout << "\n          ";
+			cin >> checkName;
+			cout << "\n          Please enter your password:";
+			cout << "\n          ";
+			cin >> checkPassword;
+			for (int i = 0; i < ::increaments; i++)
+			{
+
+				if (oldData[i].name == checkName && oldData[i].password == checkPassword)
+				{
+					::accountNum = i;
+					::balance = oldData[i].balance;
+					::borrow = oldData[i].borrowed;
+					checked = true;
+				}
+			}
+			if (checked)
+			{
+				do
+				{
+					system("CLS");
+					cout << "\n          Hello " << oldData[::accountNum].name << endl;
+					cout << "\n          What would you like to do?" << endl;
+					cout << "\n          1.Actions with card" << endl;
+					cout << "\n          2.Check balance" << endl;
+					cout << "\n          0.Exit" << endl;
+					num = _getch();
+					switch (num)
+					{
+					case 48:
+						break;
+					case 49:
+						Menu(oldData);
+						break;
+					case 50:
+						CheckBalance();
+						break;
+					default:
+						cout << "\n          Error! Section not found. Please try one more time." << endl
+							 << endl;
+						system("pause");
+						break;
+					}
+
+				} while (num != '0');
+			}
+			else
+				cout << "\n          Wrong name or password\n";
+			break;
+		case 50:
+			system("CLS");
+			cout << "\n          Input your name without space";
+			cout << "\n          ";
+			cin >> data.name;
+			cout << "\n          Input your password without space";
+			cout << "\n          ";
+			cin >> data.password;
+			data.balance = 0;
+			data.borrowed = 0;
+			inputNewData(data);
+			break;
+		case 51:
+			break;
+		default:
+			cout << "\n          There is no such section";
+			cout << "\n          Please try one more time";
+			break;
+		}
+	} while (choice != 51);
+
+	cout << "\n          ";
+}
+#include <iostream> // Input & output
+#include <string>  // Text
+#include <ctime>   // Time sleep
+#include <ctype.h> // Validation
+#include <conio.h> // _getch()
+#include <windows.h> // Loading
+#include <fstream> // File handling 
+#include <chrono>
+
+// Header files
+#include "Header.h"
+#include "Loading.h"
+#include "Vegetables.h"
+#include "Water.h"
+#include "BreadBakery.h"
+
+using namespace std;
+
+//Owner price & storage quantity changers
+int price;
+int quantity;
+int Overall_Sum; // Calculating Overall sum "×ÅÊ"
+
+//Password and login for Owner
+string Owner_Login_Sign = "Rustam202";
+string Owner_Parol_Sign = "Rustam202";
+
+//string Owner_Login_Sign = "1";
+//string Owner_Parol_Sign = "1";
+
+// Objects
+Security User_1;
+Product_VegetablesFruits Test;
+Product_WaterBeverages Test1;
+Product_BreadBakery Test2;
+
+// Declaretion Functions
+void F_General_Menu();
+void F_Sign_in();
+void F_Developers();
+void F_Logo(); // Logo "AliBazar" for User
+void F_Logo_Owner(); // Logo "AliBazar" for Owner
+
+void F_Owner_Main_Menu(); // Owner's Main Menu
+void F_Owner_Products_Stotage();
+void F_Owner_Customers_List();
+
+void F_User_Main_Menu(); // User's Main Menu
+void F_Table_For_Increasing_And_Decreasing(); // User
+void F_Vegetables_Fruits_Menu(); // User
+void F_Water_Beverages_Menu(); // User
+void F_Bread_Bakery_Menu(); // User
+void F_Cart_Check();
+
+// Main Function
+int main() {
+	// Loading Time
+    F_Loading();
+	F_General_Menu();
+	
+	cout << "\n\n\t\t\t\t   Thank you for Attention!!!\n\n" << endl;
+	system("pause");
+	return 0;
+}
+
+void F_General_Menu() {
+	// Main Authentication Menu 
+	for (int i = 0; i < 1000; i++) {
+		system("cls");
+		cout << "____________________________________________________________________________________________________ \n";
+		cout << "        A L I B A Z A R                                             A U T H E N T I C A T I O N     \n";
+		cout << "____________________________________________________________________________________________________\n\n";
+		cout << "\t\t\t\t\t  Authentication \n" << endl;
+		cout << "\t\t\t\t\t   1. Sign in" << endl;
+		cout << "\t\t\t\t\t   2. Sign up" << endl;
+		cout << "\t\t\t\t\t   3. About" << endl;
+		cout << "\t\t\t\t\t   0. Exit" << endl << endl;
+		cout << "\t\t\t\t\t  Your Choice: ";
+		switch (_getch()) {
+		case 49: // Sign in
+			system("cls");
+			F_Sign_in();
+			system("pause");
+		    break;
+
+		case 50: {   // Register ('sign up')   // Set details with validation    
+			for (int i = 0; i != 1;) {
+				system("cls");
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << "        A L I B A Z A R                                             R E G I S T R A T I O N         \n";
+				cout << "____________________________________________________________________________________________________\n\n";
+				cout << "\t\t\t\t       Example of Registration: " << endl ;
+				cout << "\t\t\t\t        ______________________" << endl;
+				cout << "\t\t\t\t        User Name  : Abdullokh " << endl;
+				cout << "\t\t\t\t        Telephone  : 974006102 " << endl;
+				cout << "\t\t\t\t        Login      : Alimov_8 " << endl;
+				cout << "\t\t\t\t        Password   : Alimov808 " << endl;
+				cout << "\t\t\t\t        ______________________" << endl << endl;
+				User_1.SetUser();   
+				ValidationParol(User_1);
+				ValidationName(User_1);
+				ValidationTellNum(User_1);
+				if (Validation == 3) {
+					//////   File Handling For User Info
+					ofstream User_1_Info;
+					User_1_Info.open("User_Info.txt");  // Opening File
+					// Setting User Info to Memory
+					User_1_Info << Name_Memory << endl;
+					User_1_Info << TellNum_Memory << endl;
+					User_1_Info << Login_Memory << endl;
+					User_1_Info << Parol_Memory << endl;
+					User_1_Info.close();
+					///////// End of the File Handling
+					cout << "\t\t              __________________________________" << endl;
+					cout << "\t\t                      Correct Validation" << endl;
+					i++; 
+					cout << "                          Please press any keyboard to continue program" << endl << endl; system("Pause");
+					Validation = 0;
+				}
+				else {
+					cout << "\t\t              __________________________________" << endl;
+					cout << "\t\t                      Invalid Validation" << endl;
+					cout << "                          Please press any keyboard to rewrite details" << endl << endl;
+					system("Pause"); system("cls");
+					Validation = 0;
+				} // switch case ends
+			} // for loop ends
+		}break;
+
+		case 51:   // Developers
+			system("cls");
+			F_Developers();
+	        break;
+		case 48:
+			//i = 1000;
+			system("exit");
+			break;
+
+		default:  cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+			
+		} // switch case ends
+	} // for loop ends
+}
+
+// Sign in Function
+void F_Sign_in() {
+
+	for (int i = 0; i < 1000; i++) {
+		system("cls");
+		cout << "____________________________________________________________________________________________________ \n";
+		cout << "        A L I B A Z A R                                                       S I G N  I N          \n";
+		cout << "____________________________________________________________________________________________________\n\n";
+		cout << "\t\t\t\t\t     Sign in\n\n";
+		cout << "\t\t\t\t\t1. Sign in as Owner" << endl;
+		cout << "\t\t\t\t\t2. Sign in as User" << endl;
+		cout << "\t\t\t\t\t0. Back" << endl << endl;
+		cout << "\t\t\t\t\t   Your Choice: ";
+
+		switch (_getch()) {
+		case 49: {  // Sign in as Owner
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                          O W N E R          \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t         Owner Authentication\n\n";
+			cout << "\t\t\t\t\t  Login    : "; cin >> Login_Sign;
+			cout << "\t\t\t\t\t  Password : "; cin >> Parol_Sign;
+			if (Login_Sign == Owner_Login_Sign && Parol_Sign == Owner_Parol_Sign) {
+				// Owner's Menu
+				F_Owner_Main_Menu();
+				system("pause");
+			}
+			else {  // If Login hasn't Registered
+				cout << "\n\n\t\t\t        Your Login and Password are Invalid." << endl;
+				cout << "\t\t\t     Please press any key back to 'Sign in' Menu.\n\n" << endl;
+				system("pause");
+				F_Sign_in();
+			} // else ends
+		}break;
+
+		case 50: {   // Sign in as User
+			system("cls");
+			//////   File Handling For User Info
+			ifstream User_1_Info;
+			User_1_Info.open("User_Info.txt");
+			User_1_Info >> Name_Memory;
+			User_1_Info >> TellNum_Memory;
+			User_1_Info >> Login_Memory;
+			User_1_Info >> Parol_Memory;
+			User_1_Info.close();
+			///////// End of the File Handling
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                     C U S T O M E R         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t         Customer Authentication\n\n";
+			cout << "\t\t\t\t\t  Login    : "; cin >> Login_Sign;
+			cout << "\t\t\t\t\t  Password : "; cin >> Parol_Sign;
+			if (Login_Sign == Login_Memory && Parol_Sign == Parol_Memory) {
+				/////// User Menu
+				F_User_Main_Menu();
+				///////
+			}
+			else {  // If Login didnt Register
+				cout << "\n\n\t\t\t        Your Login and Password are Invalid." << endl;
+				cout << "\t\t\t     Please press any key back to 'Sign in' Menu.\n\n" << endl;
+				system("pause");
+				F_Sign_in();
+			} // else ends
+		}break;
+
+		case 48: {   // Back
+			system("cls");
+			i = 1000;
+			F_General_Menu();
+		}break;
+
+		default: 
+			cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+
+		} // switch
+	} // for
+}
+
+void F_Developers() {
+	cout << "____________________________________________________________________________________________________ \n";
+	cout << "        A L I B A Z A R                                                           A B O U T        \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+	cout << "\n\t\t\t\t'AliBazar' Online Shopping Aplication " << endl << endl;
+	cout << "\t\t\t  Team Name: EightSoft " << endl;
+	cout << "\t\t\t  Team Section: OOP2 - 004                         " << endl;
+	cout << "\t\t\t  Team Members: " << endl;
+	cout << "                             -----------------------------------------------\n";
+	cout << "\t\t\t\t      Alimov Abdullokh  [U1910060]\n\t\t\t\t      Zokirov Rustam [U1910049] " << endl;
+	cout << "                             -----------------------------------------------\n";
+
+	cout << "\n\n\t\t           Press any keyboard for back to Menu \n\n" << endl;
+	system("pause");
+	F_General_Menu();
+}
+
+void F_Logo() {
+	system("cls");
+	cout << "____________________________________________________________________________________________________ \n";
+	cout << "        A L I B A Z A R                                                    8. Account Info         \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+}
+
+void F_Logo_Owner() {
+	system("cls");
+	cout << "____________________________________________________________________________________________________ \n";
+	cout << "        A L I B A Z A R                                                  O W N E R  M E N U         \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+}
+
+//Owner's Part lines 252 - 727
+void F_Owner_Main_Menu() {
+	// Entering as a Owner of shop
+	for (int k = 0; k < 1000; k++) {
+		F_Logo_Owner();
+		cout << "      Main Menu\n\n";
+		cout << "      1. Products in stock \n\n";
+		cout << "      2. Customers list \n\n";
+		cout << "      0. Back\n\n";
+		cout << "      Your choice: ";
+
+		switch (_getch()) {
+		case 49: {
+			  F_Owner_Products_Stotage();
+		} break;
+
+		case 50: {
+			/*F_Owner_Customers_List();*/
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                           C U S T O M E R S  L I S T        \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\n\t\t\t   Customers list :" << endl << endl;
+			cout << "\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t      Telephone  : " << TellNum_Memory << endl << endl << endl;
+			
+			system("pause");
+		} break;
+
+		
+		case 48: {  // Back to Menu
+			system("cls");
+			k = 1000;
+			F_Sign_in();
+		} break;
+
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+		} // switch 
+	} // for loop 
+}
+
+void F_Owner_Products_Stotage(){
+	for (int i = 0; i < 1000; i++) {
+		F_Logo_Owner();
+		cout << "  Products List                                Category                    Price          In Stock\n";
+		cout << "____________________________________________________________________________________________________ \n";
+		cout << " 1. Potatoes, Weight                          Vegetables & Fruits          " << Test.get_price_potatoes()                << "\t\t  " << Test.get_storage_quantity_potatoes()               << endl;
+		cout << " 2. Yellow Carrot, Weight                     Vegetables & Fruits          " << Test.get_price_carrot()                  << "\t\t  " << Test.get_storage_quantity_carrot()                 << endl;
+		cout << " 3. Onion, Weight                             Vegetables & Fruits          " << Test.get_price_onion()                   << "\t\t  " << Test.get_storage_quantity_onion()                  << endl;
+		cout << " 4. Water, Hydrolife without gas 750ml        Water & Beverages            " << Test1.get_price_water_hydrolife_750ml()  << "\t\t  " << Test1.get_storage_quantity_water_hydrolife_750ml() << endl;
+		cout << " 5. Drink, Aloe Original 500ml                Water & Beverages            " << Test1.get_price_drink_aloe_500ml()       << "\t\t  " << Test1.get_storage_quantity_drink_aloe_500ml()      << endl;
+		cout << " 6. Nectar, Zet Apple 125ml                   Water & Beverages            " << Test1.get_price_nectar_zet_125ml()       << "\t\t  " << Test1.get_storage_quantity_nectar_zet_125ml()      << endl;
+		cout << " 7. Bun Smart Food                            Bread & Bakery Products      " << Test2.get_price_bun_smart_food()         << "\t\t  " << Test2.get_storage_quantity_bun_smart_food()        << endl;
+		cout << " 8. Cracker Tuc cheese 100g                   Bread & Bakery Products      " << Test2.get_price_cracker_tuc_cheese_100g() << "\t\t  " << Test2.get_storage_quantity_cracker_tuc_cheese_100g() << endl;
+		cout << " 9. Bread Of SAMARKAND                        Bread & Bakery Products      " << Test2.get_price_bread_samarkand()         << "\t\t  " << Test2.get_storage_quantity_bread_samarkand() << endl;
+		cout << " \n 0. Back\n";
+		cout << " Make changes in: ";
+		switch (_getch())
+		{
+		case '1': 			
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "\n  Product                                     Category                     Price         In Stock\n";
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << " Potatoes, Weight                          Vegetables & Fruits             " << Test.get_price_potatoes() << "\t\t " << Test.get_storage_quantity_potatoes()+Test.get_storage_quantity_potatoes() << endl;
+				cout << "\n 1. Change price \n 2. Change the quantity in storage\n 0. Go back \n Press '1' or '2' or '0'\n\n";
+				
+				switch (_getch()) {
+				case 49:
+					cout << " Enter a new price: ";
+					cin >> price;
+					if (price >= 0) {
+						Test.set_price_potatoes(price);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Price cannot be negative! Please check one more time.\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					cout << " Enter a new quantity in storage: ";
+					cin >> quantity;
+					if (quantity > 0) {
+						Test.set_storage_quantity_potatoes(quantity);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Quantity cannot be negative\n";
+						Sleep(0700); Sleep(0700);
+					}
+					
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' 
+			}// 'for' loop 
+			break;
+		case '2':			
+		    for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "\n  Product                                     Category                     Price         In Stock\n";
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << " Yellow Carrot, Weight                     Vegetables & Fruits             " << Test.get_price_carrot() << "\t\t " << Test.get_storage_quantity_carrot() << endl;
+				cout << "\n 1. Change price \n 2. Change the quantity in storage\n 3. Go back \n Press '1' or '2' or '0'\n\n ";
+				switch (_getch()) {
+				case 49:
+					cout << "Enter a new price: ";
+					cin >> price;
+					if (price >= 0) {
+						Test.set_price_carrot(price);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Price cannot be negative! Please check one more time.\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					cout << "Enter a new quantity in storage: ";
+					cin >> quantity;
+
+					if (quantity > 0) {
+						Test.set_storage_quantity_carrot(quantity);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Quantity cannot be negative\n";
+						Sleep(0700); Sleep(0700);
+					}
+
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' 
+			}// 'for' loop 
+			break;
+		case '3': 			
+		    for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "\n  Product                                     Category                     Price         In Stock\n";
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << " Onion, Weight                             Vegetables & Fruits             " << Test.get_price_onion() << "\t\t " << Test.get_storage_quantity_onion() << endl;
+				cout << "\n 1. Change price \n 2. Change the quantity in storage\n 0. Go back \n Press '1' or '2' or '0'\n\n ";
+				switch (_getch()) {
+				case 49:
+					cout << "Enter a new price: ";
+					cin >> price;
+					if (price >= 0) {
+						Test.set_price_onion(price);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Price cannot be negative! Please check one more time.\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					cout << "Enter a new quantity in storage: ";
+					cin >> quantity;
+					if (quantity > 0) {
+						Test.set_storage_quantity_onion(quantity);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Quantity cannot be negative\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' 
+			}// 'for' loop 
+			break;
+		case '4':		
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "\n  Product                                     Category                     Price         In Stock\n";
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << " Water, Hydrolife without gas 750ml        Water & Beverages               " << Test1.get_price_water_hydrolife_750ml() << "\t\t " << Test1.get_storage_quantity_water_hydrolife_750ml() << endl;
+				cout << "\n 1. Change price \n 2. Change the quantity in storage\n 0. Go back \n Press '1' or '2' or '0'\n\n ";
+
+				switch (_getch()) {
+				case 49:
+					cout << "Enter a new price: ";
+					cin >> price;
+					
+					if (price >= 0) {
+						Test1.set_price_water_hydrolife_750ml(price);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Price cannot be negative! Please check one more time.\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					cout << "Enter a new quantity in storage: ";
+					cin >> quantity;					
+					if (quantity > 0) {
+						Test1.set_storage_quantity_water_hydrolife_750ml(quantity);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Quantity cannot be negative\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' 
+			}// 'for' loop 
+			break;
+		case '5': 		
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "\n  Product                                     Category                     Price         In Stock\n";
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << " Drink, Aloe Original 500ml                Water & Beverages               " << Test1.get_price_drink_aloe_500ml() << "\t\t " << Test1.get_storage_quantity_drink_aloe_500ml() << endl;
+				cout << "\n 1. Change price \n 2. Change the quantity in storage\n 0. Go back \n Press '1' or '2' or '0'\n\n ";
+
+				switch (_getch()) {
+				case 49:
+					cout << "Enter a new price: ";
+					cin >> price;
+
+					if (price >= 0) {
+						Test1.set_price_drink_aloe_500ml(price);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Price cannot be negative! Please check one more time.\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					cout << "Enter a new quantity in storage: ";
+					cin >> quantity;
+					
+					if (quantity > 0) {
+						Test1.set_storage_quantity_drink_aloe_500ml(quantity);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Quantity cannot be negative\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' 
+			}// 'for' loop 
+			break;
+		case '6':		
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "\n  Product                                     Category                     Price         In Stock\n";
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << " Nectar, Zet Apple 125ml                   Water & Beverages               " << Test1.get_price_nectar_zet_125ml() << "\t\t " << Test1.get_storage_quantity_nectar_zet_125ml() << endl;
+					cout << "\n 1. Change price \n 2. Change the quantity in storage\n 0. Go back \n Press '1' or '2' or '0'\n\n ";
+
+				switch (_getch()) {
+				case 49:
+					cout << "Enter a new price: ";
+					cin >> price;	
+					if (price >= 0) {
+						Test1.set_price_nectar_zet_125ml(price);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Price cannot be negative! Please check one more time.\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					cout << "Enter a new quantity in storage: ";
+					cin >> quantity;
+					if (quantity > 0) {
+						Test1.set_storage_quantity_nectar_zet_125ml(quantity);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Quantity cannot be negative\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' 
+			}// 'for' loop 
+			break;
+		case '7':			
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "\n  Product                                     Category                     Price         In Stock\n";
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << " Bun Smart Food                            Bread & Bakery Products         " << Test2.get_price_bun_smart_food() << "\t\t " << Test2.get_storage_quantity_bun_smart_food() << endl;
+				cout << "\n 1. Change price \n 2. Change the quantity in storage\n 0. Go back \n Press '1' or '2' or '0'\n\n ";
+				switch (_getch()) {
+				case 49:
+					cout << "Enter a new price: ";
+					cin >> price;	
+					if (price >= 0) {
+						Test2.set_price_bun_smart_food(price);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Price cannot be negative! Please check one more time.\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					cout << "Enter a new quantity in storage: ";
+					cin >> quantity;
+					if (quantity > 0) {
+						Test2.set_storage_quantity_bun_smart_food(quantity);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Quantity cannot be negative\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' 
+			}// 'for' loop 
+			break;
+		case '8':			
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "\n  Product                                     Category                     Price         In Stock\n";
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << " Cracker Tuc cheese 100g                   Bread & Bakery Products         " << Test2.get_price_cracker_tuc_cheese_100g() << "\t\t " << Test2.get_storage_quantity_cracker_tuc_cheese_100g() << endl;
+				cout << "\n 1. Change price \n 2. Change the quantity in storage\n 0. Go back \n Press '1' or '2' or '0'\n\n ";
+				switch (_getch()) {
+				case 49:
+					cout << "Enter a new price: ";
+					cin >> price;
+					if (price >= 0) {
+						Test2.set_price_cracker_tuc_cheese_100g(price);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Price cannot be negative! Please check one more time.\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					cout << "Enter a new quantity in storage: ";
+					cin >> quantity;				
+					if (quantity > 0) {
+						Test2.set_storage_quantity_cracker_tuc_cheese_100g(quantity);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Quantity cannot be negative\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' 
+			}// 'for' loop 
+			break;
+		case '9':			
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "\n  Product                                     Category                     Price         In Stock\n";
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << " Bread Of SAMARKAND                        Bread & Bakery Products         " << Test2.get_price_bread_samarkand() << "\t\t " << Test2.get_storage_quantity_bread_samarkand() << endl;
+	 		    cout << "\n 1. Change price \n 2. Change the quantity in storage\n 0. Go back \n Press '1' or '2' or '0'\n\n ";
+				switch (_getch()) {
+				case 49:
+					cout << "Enter a new price: ";
+					cin >> price;
+					
+					if (price >= 0) {
+						Test2.set_price_bread_samarkand(price);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Price cannot be negative! Please check one more time.\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					cout << "Enter a new quantity in storage: ";
+					cin >> quantity;					
+					if (quantity > 0) {
+						Test2.set_storage_quantity_bread_samarkand(quantity);
+						cout << " Successfully changed!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Quantity cannot be negative\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' 
+			}// 'for' loop 
+			break;
+		case '0': {  // Back to Menu
+			system("cls");
+			i = 1000;
+			F_Sign_in();
+		} break;
+
+		case 'i' || 'I': { // User info   
+			system("cls");
+			cout << "\n\t\t\t   User Information:" << endl;;
+			cout << "\t\t    _______________________________" << endl << endl;;
+			cout << "\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t      Telephone  : " << TellNum_Memory << endl;
+			cout << "\t\t      Login      : " << Login_Memory << endl;
+			cout << "\t\t      Password   : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		}
+			   break;
+			
+		default: { cout << "\n\t\t      Your choice is not available in Menu" << endl;
+			cout << "\t\tPlease press any keyboard to continue program\n" << endl;
+			system("pause");
+		}
+		} 
+		
+	} // for loop for products in stock  
+}
+
+void F_Owner_Customers_List(){
+	system("cls");
+	ofstream User_1_Info;
+	User_1_Info.open("User_Info.txt");  // Opening File
+	// Setting User Info to Memory
+	User_1_Info << Name_Memory << endl;
+	User_1_Info << TellNum_Memory << endl;
+	//User_1_Info.close();
+	cout << "\n\t\t\t   Customers list :" << endl;;
+	cout << "\t\t    _______________________________" << endl << endl;;
+	cout << "\t\t      User Name  : " << Name_Memory << endl;
+	cout << "\t\t      Telephone  : " << TellNum_Memory << endl << endl << endl;
+	system("pause");
+}
+
+// User's Part lines 728 - 1282
+void F_User_Main_Menu() {
+	// Entering as a Guest
+	for (int i = 0; i < 1000; i++) {
+		F_Logo();
+		cout << "      Categories\n\n";
+		cout << "      1. Vegetables & Fruits\n\n";
+		cout << "      2. Water & Beverages\n\n";
+		cout << "      3. Bread & Bakery Products\n\n";
+		cout << "      4. Cart and Overall Sums\n\n";
+		cout << "      0. Go Back\n\n";
+		cout << "      Your choice: ";
+
+		switch (_getch()) {
+		case 49: {
+			F_Vegetables_Fruits_Menu();
+		} break;
+
+		case 50: {
+			F_Water_Beverages_Menu();
+		} break;
+
+		case 51: {
+			F_Bread_Bakery_Menu();
+		}
+		case 52:
+		{
+			F_Cart_Check();
+		}
+			   break;
+		case 48: {  // Back to Menu
+			system("cls");
+			i = 1000;
+			F_Sign_in();
+		} break;
+
+		case 56: { // User info   
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                   U S E R  I N F O         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t    User Information:" << endl << endl;
+			cout << "\t\t\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t\t\t      Telephone  : " << TellNum_Memory << endl;
+			cout << "\t\t\t\t      Login      : " << Login_Memory << endl;
+			cout << "\t\t\t\t      Password   : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		}
+			   break;
+
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+		} // switch 
+	} // for loop 
+}
+
+void F_Table_For_Increasing_And_Decreasing() {
+
+	cout << "     (+)   'Press 1'                        \n";
+	cout << "     (-)   'Press 2'                        \n";
+	cout << "     (0)   'Back'                           \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+	cout << "     Add to Cart:  \n";
+	//cin >> VariableForIncreasingAndDecreasing;
+}
+
+void F_Vegetables_Fruits_Menu() {
+	for (int k = 0; k < 1000; k++) {
+		F_Logo();
+		cout << "      Categories -> Vegetables & Fruits \t\t Cart \n";
+		cout << "____________________________________________________________________________________________________\n\n";
+		cout << " 1. Potatoes, Weight \t\t\t\t\t"; cout << Test.get_quantity_potatoes() << " (kg)" << endl;
+		cout << "    " << Test.get_price_potatoes() << " UZS for 1 kg\n\n";
+		cout << " 2. Yellow Carrot, Weight \t\t\t\t"; cout << Test.get_quantity_carrot() << " (kg)" << endl;
+		cout << "    " << Test.get_price_carrot() << " UZS for 1 kg\n\n";
+		cout << " 3. Onion, Weight \t\t\t\t\t"; cout << Test.get_quantity_onion() << " (kg)" << endl;
+		cout << "    " << Test.get_price_onion() << " UZS for 1 kg\n\n";
+		cout << " 0. Back\n\n";
+		cout << " Your choice: ";
+		switch (_getch()) {
+			// for potatoes
+		case 49: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "      Categories -> Vegetables & Fruits \t\t Cart \n";
+				cout << "____________________________________________________________________________________________________\n";
+				cout << "     Potatoes, Weight \t\t\t\t\t"; cout << Test.get_quantity_potatoes() << " (kg)" << endl;
+				cout << "     " << Test.get_price_potatoes() << " UZS for 1 kg\n\n";
+				//
+				
+	            F_Table_For_Increasing_And_Decreasing();
+				
+				switch (_getch()) {
+				case 49:
+					if (Test.get_storage_quantity_potatoes() > 0) { // checking for storage and user needs
+						Test.set_quantity_potatoes_incrementing();
+						cout << " Quantity of Potatoes (kg): " << Test.get_quantity_potatoes() << endl;
+						cout << "   Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (Test.get_quantity_potatoes() > 0) { // Check for (-1 kg)
+						Test.set_quantity_potatoes_decrementing();
+						cout << " Quantity of Potatoes (kg): " << Test.get_quantity_potatoes() << endl;
+						cout << "   Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for potato
+			}// 'for' loop for potato
+		}
+			   break;
+			   // case 2 - for carrot
+		case 50: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				// Rustam have changed
+				cout << "      Categories -> Vegetables & Fruits \t\t Cart \n";
+				cout << "____________________________________________________________________________________________________\n";
+				cout << "     Yellow Carrot, Weight \t\t\t\t"; cout << Test.get_quantity_carrot() << " (kg)" << endl;
+				cout << "     " << Test.get_price_carrot() << " UZS for 1 kg\n\n";
+			
+				F_Table_For_Increasing_And_Decreasing();
+		
+				switch (_getch()) {
+				case 49:
+				
+					//
+					if (Test.get_storage_quantity_carrot() > 0) { // checking for storage and user needs
+						Test.set_quantity_carrot_incrementing();
+						cout << " Quantity of Carrot (kg): " << Test.get_quantity_carrot() << endl;
+						cout << "   Successfully added \n";
+						Sleep(0700); Sleep(0700);
+
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					//
+					break;
+				case 50:
+					if (Test.get_quantity_carrot() > 0) { // Check for (-1 kg)
+						Test.set_quantity_carrot_decrementing();
+						cout << " Quantity of Carrot (kg): " << Test.get_quantity_carrot() << endl;
+						cout << "   Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg) cannot  decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for carrot
+			}// 'for' loop for carrot
+		}
+			   break;
+			   // case 3 - for onion
+		case 51: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				// Rustam have changed
+				cout << "      Categories -> Vegetables & Fruits \t\t Cart \n";
+				cout << "____________________________________________________________________________________________________\n";
+				cout << "     Onion, Weight \t\t\t\t\t"; cout << Test.get_quantity_onion() << " (kg)" << endl;
+				cout << "     " << Test.get_price_onion() << " UZS for 1 kg\n\n";
+				//
+				F_Table_For_Increasing_And_Decreasing();
+
+				switch (_getch()) {
+				case 49:				
+					if (Test.get_storage_quantity_onion() > 0) { // checking for storage and user needs
+						Test.set_quantity_onion_incrementing();
+						cout << " Quantity of Onion (kg): " << Test.get_quantity_onion() << endl;
+						cout << "   Successfully added \n";
+						Sleep(0700); Sleep(0700);
+			       	}
+					else {
+					cout << " Product is over / finished. Sorry!\n";
+					Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (Test.get_quantity_onion() > 0) { // Check for (-1 kg)
+						Test.set_quantity_onion_decrementing();
+						cout << " Quantity of Onion (kg): " << Test.get_quantity_onion() << endl;
+						cout << "   Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg) cannot  decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for onion
+			}// 'for' loop for onion
+		}
+			   break;
+			   // Back to F_User menu 
+		case 48: {   k = 1000;
+			F_User_Main_Menu(); }
+			   break;
+		case 56: { // User info   
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                   U S E R  I N F O         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t    User Information:" << endl << endl;
+			cout << "\t\t\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t\t\t      Telephone  : " << TellNum_Memory << endl;
+			cout << "\t\t\t\t      Login      : " << Login_Memory << endl;
+			cout << "\t\t\t\t      Password   : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		}
+			   break;
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}	
+		} // switch ends
+	} // loop ends
+} // function ends
+
+void F_Water_Beverages_Menu() {
+	for (int k = 0; k < 1000; k++) {
+		F_Logo();
+		cout << "      Categories -> Water & Beverages \t\t\t Cart \n";
+		cout << "____________________________________________________________________________________________________\n\n";
+		cout << " 1. Water, Hydrolife without gas 750ml \t\t\t"; cout << Test1.get_quantity_water_hydrolife_750ml() << " (pc)" << endl;
+		cout << "    " << Test1.get_price_water_hydrolife_750ml() << " UZS for 1 pc\n\n";
+		cout << " 2. Drink, Aloe Original 500ml \t\t\t\t"; cout << Test1.get_quantity_drink_aloe_500ml() << " (pc)" << endl;
+		cout << "    " << Test1.get_price_drink_aloe_500ml() << " UZS for 1 pc\n\n";
+		cout << " 3. Nectar, Zet Apple 125ml \t\t\t\t"; cout << Test1.get_quantity_nectar_zet_125ml() << " (pc)" << endl;
+		cout << "    " << Test1.get_price_nectar_zet_125ml() << " UZS for 1 pc\n\n";
+		cout << " 0. Back\n\n";
+		cout << " Your choice: ";
+		switch (_getch()) {
+		case 49: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "      Categories -> Water & Beverages \t\t\t Cart \n";
+				cout << "____________________________________________________________________________________________________\n";
+				cout << "     Water, Hydrolife without gas 750ml \t\t  "; cout << Test1.get_quantity_water_hydrolife_750ml() << " (pc)" << endl;
+				cout << "     " << Test1.get_price_water_hydrolife_750ml() << " UZS for 1 pc\n\n";
+
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Test1.get_storage_quantity_water_hydrolife_750ml() > 0) { // checking for storage and user needs
+						Test1.set_quantity_water_hydrolife_750ml_incrementing();
+						cout << " Quantity of Bottles (pc): " << Test1.get_quantity_water_hydrolife_750ml() << endl;
+						cout << "   Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (Test1.get_quantity_water_hydrolife_750ml() > 0) { // Check for (-1 kg)
+						Test1.set_quantity_water_hydrolife_750ml_decrementing();
+						cout << " Quantity of Bottles (pc): " << Test1.get_quantity_water_hydrolife_750ml() << endl;
+						cout << "   Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for water
+			}// 'for' loop for water
+		}
+			   break;
+			   // case 2 - for drink_aloe_500ml
+		case 50: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				// Rustam have changed
+				cout << "      Categories -> Water & Beverages \t\t\t Cart \n";
+				cout << "____________________________________________________________________________________________________\n";
+				cout << "     Drink, Aloe Original 500ml \t\t\t  "; cout << Test1.get_quantity_drink_aloe_500ml() << " (pc)" << endl;
+				cout << "     " << Test1.get_price_drink_aloe_500ml() << " UZS for 1 pc\n\n";
+				//
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Test1.get_storage_quantity_drink_aloe_500ml() > 0) { // checking for storage and user needs
+						Test1.set_quantity_drink_aloe_500ml_incrementing();
+						cout << " Quantity of Bottles (pc): " << Test1.get_quantity_drink_aloe_500ml() << endl;
+						cout << "   Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (Test1.get_quantity_drink_aloe_500ml() > 0) { // Check for (-1 kg)
+						Test1.set_quantity_drink_aloe_500ml_decrementing();
+						cout << " Quantity of Bottles (pc): " << Test1.get_quantity_drink_aloe_500ml() << endl;
+						cout << "   Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (pc) cannot  decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for aloe drink
+			}// 'for' loop for aloe drink
+		}
+			   break;
+			   // case 3 - for nectar_zet_125ml
+		case 51: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				// Rustam have changed
+				cout << "      Categories -> Water & Beverages \t\t\t Cart \n";
+				cout << "____________________________________________________________________________________________________\n";
+				cout << "     Nectar, Zet Apple 125ml \t\t\t\t"; cout << Test1.get_quantity_nectar_zet_125ml() << " (pc)" << endl;
+				cout << "     " <<Test1.get_price_nectar_zet_125ml() << " UZS for 1 pc\n\n";
+				//
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					//
+					if (Test1.get_storage_quantity_nectar_zet_125ml() > 0) { // checking for storage and user needs
+						Test1.set_quantity_nectar_zet_125ml_incrementing();
+						cout << " Quantity of Nectar 125ml (pc): " << Test1.get_quantity_nectar_zet_125ml() << endl;
+						cout << "   Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (Test1.get_quantity_nectar_zet_125ml() > 0) { // Check for (-1 kg)
+						Test1.set_quantity_nectar_zet_125ml_decrementing();
+						cout << " Quantity of Nectar 125ml (pc): " << Test1.get_quantity_nectar_zet_125ml() << endl;
+						cout << "   Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (pc) cannot  decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for nectar_zet_125ml
+			}// 'for' loop for nectar_zet_125ml
+		}
+			   break;
+			   // Back to F_User menu 
+		case 48: {   k = 1000;
+			F_User_Main_Menu(); }
+			   break;
+		case 56: { // User info   
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                   U S E R  I N F O         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t    User Information:" << endl << endl;
+			cout << "\t\t\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t\t\t      Telephone  : " << TellNum_Memory << endl;
+			cout << "\t\t\t\t      Login      : " << Login_Memory << endl;
+			cout << "\t\t\t\t      Password   : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		}
+			   break;
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+		} // switch ends
+
+	} // loop ends
+
+} // function ends
+
+void F_Bread_Bakery_Menu() {
+	for (int k = 0; k < 1000; k++) {
+		F_Logo();
+		cout << "      Categories -> Bread & Bakery Products \t\t Cart \n";
+		cout << "____________________________________________________________________________________________________\n\n";
+		cout << " 1. Bun Smart Food \t\t\t\t\t"; cout << Test2.get_quantity_bun_smart_food() << " (pc)" << endl;
+		cout << "    " << Test2.get_price_bun_smart_food() << " UZS for 1 pc\n\n";
+		cout << " 2. Cracker Tuc cheese 100g \t\t\t\t"; cout << Test2.get_quantity_cracker_tuc_cheese_100g() << " (pc)" << endl;
+		cout << "    " << Test2.get_price_cracker_tuc_cheese_100g() << " UZS for 1 pc\n\n";
+		cout << " 3. Bread Of SAMARKAND \t\t\t\t\t"; cout << Test2.get_quantity_bread_samarkand() << " (pc)" << endl;
+		cout << "    " << Test2.get_price_bread_samarkand() << " UZS for 1 pc\n\n";
+		cout << " 0. Back\n\n";
+		cout << " Your choice: ";
+		switch (_getch()) {
+		case 49: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "      Categories -> Bread & Bakery Products \t\t Cart \n";
+				cout << "____________________________________________________________________________________________________\n";
+				cout << "     Bun Smart Food \t\t\t\t\t"; cout << Test2.get_quantity_bun_smart_food() << " (pc)" << endl;
+				cout << "     " << Test2.get_price_bun_smart_food() << " UZS for 1 pc\n\n";
+
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Test2.get_storage_quantity_bun_smart_food() > 0) { // checking for storage and user needs
+						Test2.set_quantity_bun_smart_food_incrementing();
+						cout << " Quantity of Bun Smart Food (pc): " << Test2.get_quantity_bun_smart_food() << endl;
+						cout << "   Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (Test2.get_quantity_bun_smart_food() > 0) { // Check for (-1 pc)
+						Test2.set_quantity_bun_smart_food_decrementing();
+						cout << " Quantity of Bun Smart Food (pc): " << Test2.get_quantity_bun_smart_food() << endl;
+						cout << "   Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for bun bread
+			}// 'for' loop for bun bread
+		}
+			   break;
+			   // case 2 - for cracker_tuc_cheese_100g
+		case 50: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				// Rustam have changed
+				cout << "      Categories -> Bread & Bakery Products \t\t Cart \n";
+				cout << "____________________________________________________________________________________________________\n";
+				cout << "     Cracker Tuc cheese 100g  \t\t\t\t"; cout << Test2.get_quantity_cracker_tuc_cheese_100g() << " (pc)" << endl;
+				cout << "     " << Test2.get_price_cracker_tuc_cheese_100g() << " UZS for 1 pc\n\n";
+				//
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					
+					if (Test2.get_storage_quantity_cracker_tuc_cheese_100g() > 0) { // checking for storage and user needs
+						Test2.set_quantity_cracker_tuc_cheese_100g_incrementing();
+						cout << " Quantity of Cracker Tuc Cheese 100g (pc): " << Test2.get_quantity_cracker_tuc_cheese_100g() << endl;
+						cout << "   Successfully added \n";
+						Sleep(0700); Sleep(0700);
+						
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (Test2.get_quantity_cracker_tuc_cheese_100g() > 0) { // Check for (-1 pc)
+						Test2.set_quantity_cracker_tuc_cheese_100g_decrementing();
+						cout << " Quantity of Cracker Tuc Cheese 100g (pc): " << Test2.get_quantity_cracker_tuc_cheese_100g() << endl;
+						cout << "   Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (pc) cannot  decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for cracker_tuc_cheese_100g
+			}// 'for' loop for cracker_tuc_cheese_100g
+		}
+			   break;
+			   // case 3 - for bread_samarkand
+		case 51: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				// Rustam have changed
+				cout << "      Categories -> Bread & Bakery Products \t\t Cart \n";
+				cout << "____________________________________________________________________________________________________\n";
+				cout << "     Bread Of SAMARKAND \t\t\t\t  "; cout << Test2.get_quantity_bread_samarkand() << " (pc)" << endl;
+				cout << "     " << Test2.get_price_bread_samarkand() << " UZS for 1 pc\n\n";
+				
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Test2.get_storage_quantity_bread_samarkand() > 0) { // checking for storage and user needs
+						Test2.set_quantity_bread_samarkand_incrementing();
+						cout << " Quantity of Bread Of SAMARKAND (pc): " << Test2.get_quantity_bread_samarkand() << endl;
+						cout << "   Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (Test2.get_quantity_bread_samarkand() > 0) { // Check for (-1 pc)
+						Test2.set_quantity_bread_samarkand_decrementing();
+						cout << " Quantity of Bread Of SAMARKAND (pc): " << Test2.get_quantity_bread_samarkand() << endl;
+						cout << "   Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (pc) cannot  decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for bread_samarkand
+			}// 'for' loop for bread_samarkand
+		}
+			   break;
+			   // Back to F_User menu 
+		case 48: {   k = 1000;
+			F_User_Main_Menu(); }
+			   break;
+		case 56: { // User info   
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                   U S E R  I N F O         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t    User Information:" << endl << endl;
+			cout << "\t\t\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t\t\t      Telephone  : " << TellNum_Memory << endl;
+			cout << "\t\t\t\t      Login      : " << Login_Memory << endl;
+			cout << "\t\t\t\t      Password   : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		}
+			   break;
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+		} // switch ends
+
+	} // loop ends
+
+} // function ends
+
+// Cart Function 
+void F_Cart_Check() {
+	system("cls");
+	cout << "____________________________________________________________________________________________________ \n";
+	cout << "                                              C A R T \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+	// Check
+	for (int i = 1; i <= 1; i++) {
+		if (Test.get_quantity_potatoes() > 0) {
+			cout << "\n\t  " << i << "." << "Potatoes, Weight    " << Test.get_quantity_potatoes() << " (kg)     Price: " << Test.get_quantity_potatoes() * Test.get_price_potatoes();
+			i++;
+			Overall_Sum += Test.get_quantity_potatoes() * Test.get_price_potatoes();
+		}
+		if (Test.get_quantity_carrot() > 0) {
+			cout << "\n\t  " << i << "." << "Carrot, Weight      " << Test.get_quantity_carrot() << " (kg)     Price: " << Test.get_quantity_carrot() * Test.get_price_carrot();
+			i++;
+			Overall_Sum += Test.get_quantity_carrot() * Test.get_price_carrot();
+		}
+		if (Test.get_quantity_onion() > 0) {
+			cout << "\n\t  " << i << "." << "Onion, Weight       " << Test.get_quantity_onion() << " (kg)     Price: " << Test.get_quantity_onion() * Test.get_price_onion();
+			i++;
+			Overall_Sum += Test.get_quantity_onion() * Test.get_price_onion();
+		}
+		if (Test1.get_quantity_drink_aloe_500ml() > 0) {
+			cout << "\n\t  " << i << "." << "Aloe 500ml          " << Test1.get_quantity_drink_aloe_500ml() << " (pc)     Price: " << Test1.get_quantity_drink_aloe_500ml() * Test1.get_price_drink_aloe_500ml();
+			i++;
+			Overall_Sum += Test1.get_quantity_drink_aloe_500ml() * Test1.get_price_drink_aloe_500ml();
+		}
+		if (Test1.get_quantity_nectar_zet_125ml() > 0) {
+			cout << "\n\t  " << i << "." << "Nectar Zet 125ml    " << Test1.get_quantity_nectar_zet_125ml() << " (pc)     Price: " << Test1.get_quantity_nectar_zet_125ml() * Test1.get_price_nectar_zet_125ml();
+			i++;
+			Overall_Sum += Test1.get_quantity_nectar_zet_125ml() * Test1.get_price_nectar_zet_125ml();
+		}
+		if (Test1.get_quantity_water_hydrolife_750ml() > 0) {
+			cout << "\n\t  " << i << "." << "Hydrolife 750ml     " << Test1.get_quantity_water_hydrolife_750ml() << " (pc)     Price: " << Test1.get_quantity_water_hydrolife_750ml() * Test1.get_price_water_hydrolife_750ml();
+			i++;
+			Overall_Sum += Test1.get_quantity_water_hydrolife_750ml() * Test1.get_price_water_hydrolife_750ml();
+		}
+		if (Test2.get_quantity_bread_samarkand() > 0) {
+			cout << "\n\t  " << i << "." << "Samarkand Bread ,   " << Test2.get_quantity_bread_samarkand() << " (pc)     Price: " << Test2.get_quantity_bread_samarkand() * Test2.get_price_bread_samarkand();
+			i++;
+			Overall_Sum += Test2.get_quantity_bread_samarkand() * Test2.get_price_bread_samarkand();
+		}
+		if (Test2.get_quantity_bun_smart_food() > 0) {
+			cout << "\n\t  " << i << "." << "Bun Smart Food ,    " << Test2.get_quantity_bun_smart_food() << " (pc)     Price: " << Test2.get_quantity_bun_smart_food() * Test2.get_price_bun_smart_food();
+			i++;
+			Overall_Sum += Test2.get_quantity_bun_smart_food() * Test2.get_price_bun_smart_food();
+		}
+		if (Test2.get_quantity_cracker_tuc_cheese_100g() > 0) {
+			cout << "\n\t  " << i << "." << "Tuc Cheese 100g ,   " << Test2.get_quantity_cracker_tuc_cheese_100g() << " (pc)     Price: " << Test2.get_quantity_cracker_tuc_cheese_100g() * Test2.get_price_cracker_tuc_cheese_100g();
+			i++;
+			Overall_Sum += Test2.get_quantity_cracker_tuc_cheese_100g() * Test2.get_price_cracker_tuc_cheese_100g();
+		}
+
+		if (i == 1) { // if nothing go to Menu
+			cout << "\n\t You do not have any product in CART.\n";
+			cout << "\tEnter any keyboard go to Menu\n\n" << endl;
+			system("pause");
+			Overall_Sum = 0;
+			F_User_Main_Menu();
+		}
+		if (i > 1) { // Menu for buying or back 
+			cout << "\n\n\t\t Overall Price: " << Overall_Sum << " Sum" << endl;
+			cout << "\n 1. Buy it now" << endl;
+			cout << " 0. Go Back to Menu" << endl;
+
+			switch (_getch()) {
+			case 49: { //buy
+				system("cls");
+				////
+				// We need to add
+				////
+				cout << "Works !" << endl;
+				system("pause");
+			}
+				   break;
+			case 48: { // Back
+				system("cls");
+				Overall_Sum = 0;
+				F_User_Main_Menu();
+			}
+				   break;
+			default: F_Cart_Check();
+			} // switch ends
+
+		} //if ends
+
+	}// loop end
+	//system("pause");
+} // function ends
+// "ALIBAZAR Version 3.0" - ware updated all classes for products
+//                        - was updated the password view (added *)
+//                        - customers list
+//                        - modified the the products view for owner
+//                        - modified the main function for chnaging the proce and quantity of product
+// Done by 'Rustam Zokirov - 'U1910049' and 'Alimov Abdullokh - U1910060'
+// EightSoft Academy Product
+// All rights reserved
+
+
+#include <iostream>  // I/O stream
+#include <string>    // Text
+#include <ctime>     // Time 'sleep' function
+#include <ctype.h>   // Validation check
+#include <conio.h>   // 'getch' function
+#include <Windows.h> // Loading_Page
+#include <fstream>   // File handling 
+#include <iomanip>   // 'setfill' function
+
+// Header Files
+// All extra classes are there
+#include "Products.h"     // Classes for products
+#include "Person.h"       // User part 
+#include "Loading_Page.h" // Loading Animation
+#include "Validation.h"   // Validation for User inputted information
+#include "Password_Vali_Asterisk.h"   // Password "********"
+
+using namespace std;
+
+// Objects
+Validation_C User_Validtaion;
+User User_1(Name_Memory, TellNum_Memory, Login_Memory, Parol_Memory);
+
+// Product Types
+Class_Of_Products1 Product1_1("Potatoes", "Vegetables & Fruits", 7890.0, 10), Product1_2("Carrots", "Vegetables & Fruits", 4890.0, 10), Product1_3("Onion", "Vegetables & Fruits", 3600.0, 10);
+Class_Of_Products2 Product2_1("Water", "Water & Beverages", 1590.0, 10), Product2_2("Pepsi", "Water & Beverages", 3590.0, 10), Product2_3("Nectar", "Water & Beverages", 7550.0, 10);
+Class_Of_Products3 Product3_1("Pizza", "Fast Food Products", 48000.0, 10), Product3_2("Burger", "Fast Food Products", 19000.0, 10), Product3_3("Potatoe Fries", "Fast Food Products", 15000.0, 10);
+
+
+// Global Values 
+long double Overall_Sum;
+float Ch_Price, Ch_Quantity;
+string Product_Name = "" , Product_Class = "";
+
+
+// Password and login for Owner
+string Owner_Login_Sign = "1";
+string Owner_Parol_Sign = "1";  
+
+// Functions 
+// Declaretion Functions
+void F_General_Menu();
+void F_Sign_in();
+void F_Developers();
+void F_Logo(); // Logo "AliBazar" for User
+void F_Logo_Owner(); // Logo "AliBazar" for Owner
+
+
+void F_User_Main_Menu(); // User's Main Menu
+void F_Table_For_Increasing_And_Decreasing(); // User
+void F_Class_Of_Products1_Menu();
+void F_Class_Of_Products2_Menu();
+void F_Class_Of_Products3_Menu();
+void F_Cart_Check();
+
+
+void F_Owner_Main_Menu(); // Owner's Main Menu
+void F_Modify_Info_Products(int take_product_location);
+void F_Owner_Products_Stotage();
+void F_Owner_Customers_List();
+
+
+///////////////////////////////////////////////////////////////////////////////
+int main() {
+
+	//Loading
+	F_Loading();
+	F_General_Menu();
+
+	system("pause");
+	return 0;
+}
+
+
+void F_General_Menu() {
+	// Main Menu 
+	for (int i = 0; i < 1000; i++) {
+		system("cls");
+		cout << "____________________________________________________________________________________________________ \n";
+		cout << "        A L I B A Z A R                                             A U T H E N T I C A T I O N     \n";
+		cout << "____________________________________________________________________________________________________\n\n";
+		cout << "\t\t\t\t\t  Authentication \n" << endl;
+		cout << "\t\t\t\t\t   1. Sign in" << endl;
+		cout << "\t\t\t\t\t   2. Sign up" << endl;
+		cout << "\t\t\t\t\t   3. About" << endl;
+		cout << "\t\t\t\t\t   0. Exit" << endl << endl;
+		cout << "\t\t\t\t\t  Your Choice: ";
+
+		switch (_getch()) {
+		case 49: { // Sign in
+			system("cls");
+			F_Sign_in();
+			system("pause");
+		}
+			   break;
+
+		case 50: {  // Register
+					// Set details with validation 
+			for (int i = 0; i != 1;) {
+				system("cls");
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << "        A L I B A Z A R                                             R E G I S T R A T I O N         \n";
+				cout << "____________________________________________________________________________________________________\n\n";
+				cout << "\t\t\t\t       Example of Registration: " << endl;
+				cout << "\t\t\t\t       ________________________" << endl;
+				cout << "\t\t\t\t        User Name : Abdullokh " << endl;
+				cout << "\t\t\t\t        Telephone : 974006102 " << endl;
+				cout << "\t\t\t\t        Login     : Alimov_8 " << endl;
+				cout << "\t\t\t\t        Password  : Alimov808 " << endl;
+				cout << "\t\t\t\t       ________________________" << endl << endl;
+				User_Validtaion.SetUser();
+
+				////////////
+
+				ValidationParol(User_Validtaion);
+				ValidationName(User_Validtaion);
+				ValidationTellNum(User_Validtaion);
+
+				if (Validation == 3) {
+					////// File Handling For User Info
+					ofstream User_Info;
+					User_Info.open("User_Info.txt", ios::app);  // Opening File
+
+					// Setting User Info in Memory
+					User_Info << Name_Memory << endl;
+					User_Info << TellNum_Memory << endl;
+					User_Info << Login_Memory << endl;
+					User_Info << Parol_Memory << endl;
+					User_Info.close();
+					///////// End of the File Handling
+
+					cout << "\t\t\t\t __________________________________" << endl;
+					cout << "\t\t\t\t      Correct Validation" << endl;
+					i++;
+					cout << "\t\t\t\tPlease press any key to continue..." << endl << endl;
+					system("Pause");
+					Validation = 0;
+				}
+				else {
+					cout << "\t\t\t\t __________________________________" << endl;
+					cout << "\t\t\t\t       Invalid Validation" << endl;
+					cout << "\t\t   Please press '1' to rewrite || Press any key to go back to menu" << endl << endl;
+					Validation = 0;
+					switch (_getch()) {
+					case 49: {
+						// Rewriting i=0; 
+					}
+						   break;
+
+					default: F_General_Menu(); 
+						// Go back 
+					}
+
+				} // else
+			}
+		}
+			   break;
+
+		case 51: {  // Developers
+			system("cls");
+			F_Developers();
+		}
+			   break;
+
+		case 48: {  // Developers
+			system("cls");
+			cout << "\n\n\n\n\t\t\t\tThank you for your attention!\n\n\n\n\n\n\n\n\n\t\t\t\t";
+
+			system("pause");
+		}
+			   break;
+
+		default: {  cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+			   break;
+		}
+	}
+
+}
+
+
+void F_Developers() {
+	cout << "____________________________________________________________________________________________________ \n";
+	cout << "        A L I B A Z A R                                                           A B O U T        \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+	cout << "\n\t\t\t\t'AliBazar' Online Shopping Aplication " << endl << endl;
+	cout << "\t\t\t\t   Team Name: EightSoft " << endl;
+	cout << "\t\t\t\tTeam Section: OOP2 - 004                         " << endl;
+	cout << "\t\t\t\tTeam Members: ";
+	cout << "Alimov Abdullokh [U1910060]\n\t\t\t\t\t      Zokirov Rustam   [U1910049] " << endl;
+
+	cout << "\n\n\t\t\t\tPress any key to go back to Menu \n\n" << endl;
+	system("pause");
+}
+
+
+void F_Sign_in() {
+	// Sign in Function
+	for (int i = 0; i < 1000; i++) {
+		system("cls");
+		cout << "____________________________________________________________________________________________________ \n";
+		cout << "        A L I B A Z A R                                                       S I G N  I N          \n";
+		cout << "____________________________________________________________________________________________________\n\n";
+		cout << "\t\t\t\t\t   Sign in\n\n";
+		cout << "\t\t\t\t\t1. Sign in as Owner" << endl;
+		cout << "\t\t\t\t\t2. Sign in as User" << endl;
+		cout << "\t\t\t\t\t0. Back" << endl << endl;
+		cout << "\t\t\t\t\t  Your Choice: ";
+
+		switch (_getch()) {
+		case 49: { // Sign in as Owner
+
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                          O W N E R          \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t        Owner Authentication\n\n";
+			cout << "\t\t\t\t\tLogin    : "; cin >> Login_Sign;
+			//cout << "\t\t\t\t\tPassword : "; cin >> Parol_Sign;
+			F_Password_Val();
+			Parol_Sign = Password_Val;
+
+			if (Login_Sign == Owner_Login_Sign && Parol_Sign == Owner_Parol_Sign) {
+				/////// Owner's Menu
+				F_Owner_Main_Menu();
+				//////
+				system("pause");
+			}
+			else {  // If Login hasn't Registered
+				cout << "\n\n\t\t\t        Your Login and Password are Invalid." << endl;
+				cout << "\t\t\t   Please press any key to go back to 'Sign in' Menu.\n\n" << endl;
+				system("pause");
+				F_Sign_in();
+			}
+		}   
+			   break;
+
+		case 50: {  // Sign in as User
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                     C U S T O M E R         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t      Customer Authentication\n\n";
+			cout << "\t\t\t\t\tLogin    : "; cin >> Login_Sign;
+			F_Password_Val();
+			Parol_Sign = Password_Val;
+			//////   File Handling For User Info
+			ifstream Search;
+			Search.open("User_Info.txt");
+
+			while (Search) {
+				Search >> Name_Memory;
+				Search >> TellNum_Memory;
+				Search >> Login_Memory;
+				Search >> Parol_Memory;
+				if (Login_Sign == Login_Memory && Parol_Sign == Parol_Memory) {
+					User User_1(Name_Memory, TellNum_Memory, Login_Memory, Parol_Memory);
+					F_User_Main_Menu();
+				}
+			}
+			Search.close();
+			///////// End of the File Handling
+
+			cout << "\n\n\t\t\t        Your Login and Password are Invalid." << endl;
+			cout << "\t\t\t   Please press any key to go back to 'Sign in' Menu.\n\n" << endl;
+			system("pause");
+			F_Sign_in();
+
+		}
+			   break;
+
+		case 48: {  // Back
+			system("cls");
+			i = 1000;
+			F_General_Menu();
+
+		}
+			   break;
+
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+			   break;
+		}
+	}
+
+}
+
+// User
+void F_Logo() {
+	system("cls");
+	cout << "____________________________________________________________________________________________________ \n";
+	cout << "        A L I B A Z A R                                                    8. Account Info         \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+}
+
+
+void F_User_Main_Menu() {
+	// Entering as a Guest
+	for (int i = 0; i < 1000; i++) {
+
+		F_Logo();
+
+		cout << "       Categories\n\n";
+		cout << "       1. Vegetables & Fruits\n\n";
+		cout << "       2. Water & Beverages\n\n";
+		cout << "       3. Fast Food Products\n\n";
+		cout << "       4. Cart and Overall Sums\n\n";
+		cout << "       0. Go Back\n\n";
+		cout << "       Your choice: ";
+
+		switch (_getch()) {
+		case 49: {
+			F_Class_Of_Products1_Menu();
+		} break;
+
+		case 50: {
+			F_Class_Of_Products2_Menu();
+		} break;
+
+		case 51: {
+			F_Class_Of_Products3_Menu();
+		} break;
+
+		case 52:{
+			F_Cart_Check();
+		}break;
+
+		case 48: {  // Back to Menu
+			system("cls");
+			i = 1000;
+			F_Sign_in();
+		} break;
+
+		case 56: { // User info   
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                   U S E R  I N F O         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t      User Information :" << endl << endl;
+			cout << "\t\t\t\t      User Name : " << Name_Memory << endl;
+			cout << "\t\t\t\t      Telephone : " << TellNum_Memory << endl;
+			cout << "\t\t\t\t      Login     : " << Login_Memory << endl;
+			cout << "\t\t\t\t      Password  : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		}
+			   break;
+
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+			   break;
+		} // switch 
+	} // for loop 
+}
+
+
+void F_Table_For_Increasing_And_Decreasing() {
+	cout << "____________________________________________________________________________________________________\n";
+	cout << "     (+)   'Press 1'                        \n";
+	cout << "     (-)   'Press 2'                        \n";
+	cout << "     (0)   'Back'                           \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+	cout << "     Add to Cart:  \n";
+	//cin >> VariableForIncreasingAndDecreasing;
+}
+
+
+void F_Class_Of_Products1_Menu() {
+	for (int k = 0; k < 1000; k++) {
+    	F_Logo();
+
+		cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+		Product1_1.Display();
+		Product1_2.Display();
+		Product1_3.Display();
+		position1 = 1;
+
+		cout << " 0. Back\n\n";
+		cout << " Your choice: ";
+
+		switch (_getch()) {
+			// for Product1_1
+		case 49: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+				Product1_1.Display(); position1 = 1;
+
+				F_Table_For_Increasing_And_Decreasing();
+
+				switch (_getch()) {
+				case 49:
+					if (Product1_1.getQuantity() > 0) { // checking for storage and user needs
+						User_1.Product1_1_User++;
+						Product1_1.quantity--;
+						cout << " Quantity of "<< Product1_1.getName() << " - " << User_1.Product1_1_User << endl;
+						cout << "     Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (User_1.Product1_1_User > 0) { // Check for (-1 kg/pc)
+						User_1.Product1_1_User--;
+						Product1_1.quantity++;
+						cout << " Quantity of " << Product1_1.getName() << " - "  << User_1.Product1_1_User << endl;
+						cout << "     Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg/pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for potato
+			}// 'for' loop for potato
+		}
+			   break;
+		   // for Product1_2
+		case 50: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+				Product1_2.Display(); position1 = 1;
+
+				F_Table_For_Increasing_And_Decreasing();
+
+				switch (_getch()) {
+				case 49:
+					if (Product1_2.getQuantity() > 0) { // checking for storage and user needs
+						User_1.Product1_2_User++;
+						Product1_2.quantity--;
+						cout << " Quantity of " << Product1_2.getName() << " - " << User_1.Product1_2_User << endl;
+						cout << "    Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (User_1.Product1_2_User > 0) { // Check for (-1 kg/pc)
+						User_1.Product1_2_User--;
+						Product1_2.quantity++;
+						cout << " Quantity of " << Product1_2.getName() << " - " << User_1.Product1_2_User << endl;
+						cout << "    Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg/pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for potato
+			}// 'for' loop for potato
+		}
+			   break;
+		   // for Product1_3
+		case 51: {
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+				Product1_3.Display(); position1 = 1;
+
+				F_Table_For_Increasing_And_Decreasing();
+
+				switch (_getch()) {
+				case 49:
+					if (Product1_3.getQuantity() > 0) { // checking for storage and user needs
+						User_1.Product1_3_User++;
+						Product1_3.quantity--;
+						cout << " Quantity of " << Product1_3.getName() << " - " << User_1.Product1_3_User << endl;
+						cout << "    Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (User_1.Product1_3_User > 0) { // Check for (-1 kg/pc)
+						User_1.Product1_3_User--;
+						Product1_3.quantity++;
+						cout << " Quantity of " << Product1_3.getName() << " - " << User_1.Product1_3_User << endl;
+						cout << "    Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg/pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for potato
+			}// 'for' loop for potato
+		}
+			   break;
+		  // Back to F_User menu 
+		case 48: {   k = 1000;
+			//F_User_Main_Menu(); 
+		}
+			   break;
+		case 56: { // User info   
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                   U S E R  I N F O         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t      User Information :" << endl << endl;
+			cout << "\t\t\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t\t\t      Telephone  : " << TellNum_Memory << endl;
+			cout << "\t\t\t\t      Login      : " << Login_Memory << endl;
+			cout << "\t\t\t\t      Password   : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		}
+			   break;
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+		} // switch ends
+	} // loop ends
+} // function ends
+
+
+void F_Class_Of_Products2_Menu() {
+	for (int k = 0; k < 1000; k++) {
+		F_Logo();
+
+		cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+		Product2_1.Display();
+		Product2_2.Display();
+		Product2_3.Display();
+		position1 = 1;
+
+		cout << " 0. Back\n\n";
+		cout << " Your choice: ";
+		switch (_getch()) {
+		case 49: { // Product2_1
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+				Product2_1.Display(); position1 = 1;
+
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Product2_1.getQuantity() > 0) { // checking for storage and user needs
+						Product2_1.quantity--;
+						User_1.Product2_1_User++;
+						cout << " Quantity of " << Product2_1.getName() << " - " << User_1.Product2_1_User << endl;
+						cout << "    Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (User_1.Product2_1_User > 0) { // Check for (-1 kg/pc)
+						Product2_1.quantity++;
+						User_1.Product2_1_User--;
+						cout << " Quantity of " << Product2_1.getName() << " - "  << User_1.Product2_1_User << endl;
+						cout << "    Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg/pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for Product2_1
+			}// 'for' loop for Product2_1
+		}
+			   break;
+		case 50: { // Product2_2
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+				Product2_2.Display(); position1 = 1;
+
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Product2_2.getQuantity() > 0) { // checking for storage and user needs
+						Product2_2.quantity--;
+						User_1.Product2_2_User++;
+						cout << " Quantity of " << Product2_2.getName() << " - " << User_1.Product2_2_User << endl;
+						cout << "    Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (User_1.Product2_2_User > 0) { // Check for (-1 kg/pc)
+						Product2_2.quantity++;
+						User_1.Product2_2_User--;
+						cout << " Quantity of " << Product2_2.getName() << " - " << User_1.Product2_2_User << endl;
+						cout << "    Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg/pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for Product2_1
+			}// 'for' loop for Product2_1
+		}
+			   break;
+		case 51: { // Product2_3
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+				Product2_3.Display(); position1 = 1;
+
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Product2_3.getQuantity() > 0) { // checking for storage and user needs
+						Product2_3.quantity--;
+						User_1.Product2_3_User++;
+						cout << " Quantity of " << Product2_3.getName() << " - " << User_1.Product2_3_User << endl;
+						cout << "    Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (User_1.Product2_3_User > 0) { // Check for (-1 kg/pc)
+						Product2_3.quantity++;
+						User_1.Product2_3_User--;
+						cout << " Quantity of " << Product2_3.getName() << " - " << User_1.Product2_3_User << endl;
+						cout << "    Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg/pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for Product2_1
+			}// 'for' loop for Product2_1
+		}
+			   break;
+			   // Back to F_User menu 
+		case 48: {   k = 1000;
+			F_User_Main_Menu(); }
+			   break;
+		case 56: { // User info   
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                   U S E R  I N F O         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t      User Information :" << endl << endl;
+			cout << "\t\t\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t\t\t      Telephone  : " << TellNum_Memory << endl;
+			cout << "\t\t\t\t      Login      : " << Login_Memory << endl;
+			cout << "\t\t\t\t      Password   : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		}
+			   break;
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+		} // switch ends
+
+	} // loop ends
+
+} // function ends
+
+
+void F_Class_Of_Products3_Menu() {
+	for (int k = 0; k < 1000; k++) {
+		F_Logo();      
+		cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+		Product3_1.Display();
+		Product3_2.Display();
+		Product3_3.Display();
+		position1 = 1;
+
+		cout << " 0. Back\n\n";
+		cout << " Your choice: ";
+		switch (_getch()) {
+		case 49: { // Product3_1
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+
+				cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+				Product3_1.Display(); position1 = 1;
+
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Product3_1.getQuantity() > 0) { // checking for storage and user needs
+						Product3_1.quantity--;
+						User_1.Product3_1_User++;
+						cout << " Quantity of " << Product3_1.getName() << " - " << User_1.Product3_1_User << endl;
+						cout << "     Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (User_1.Product3_1_User > 0) { // Check for (-1 kg/pc)
+						Product3_1.quantity++;
+						User_1.Product3_1_User--;
+						cout << " Quantity of " << Product3_1.getName() << " - " << User_1.Product3_1_User << endl;
+						cout << "     Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg/pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for bun bread
+			}// 'for' loop for bun bread
+		}
+			   break;
+		case 50: { // Product3_2
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+				Product3_2.Display(); position1 = 1;
+
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Product3_2.getQuantity() > 0) { // checking for storage and user needs
+						Product3_2.quantity--;
+						User_1.Product3_2_User++;
+						cout << " Quantity of " << Product3_2.getName() << " - " << User_1.Product3_2_User << endl;
+						cout << "     Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (User_1.Product3_2_User > 0) { // Check for (-1 kg/pc)
+						Product3_2.quantity++;
+						User_1.Product3_2_User--;
+						cout << " Quantity of " << Product3_2.getName() << " - " << User_1.Product3_2_User << endl;
+						cout << "     Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg/pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for bun bread
+			}// 'for' loop for bun bread
+		}
+			   break;
+		case 51: { // Product3_3
+			for (int j = 0; j < 1000; j++) {
+				system("cls");
+				cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+				Product3_3.Display(); position1 = 1;
+
+				F_Table_For_Increasing_And_Decreasing();
+				switch (_getch()) {
+				case 49:
+					if (Product3_3.getQuantity() > 0) { // checking for storage and user needs
+						Product3_3.quantity--;
+						User_1.Product3_3_User++;
+						cout << " Quantity of " << Product3_3.getName() << " - " << User_1.Product3_3_User << endl;
+						cout << "     Successfully added \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else {
+						cout << " Product is over / finished. Sorry!\n";
+						Sleep(0700); Sleep(0700);
+					}
+					break;
+				case 50:
+					if (User_1.Product3_3_User > 0) { // Check for (-1 kg/pc)
+						Product3_3.quantity++;
+						User_1.Product3_3_User--;
+						cout << " Quantity of " << Product3_3.getName() << " - " << User_1.Product3_3_User << endl;
+						cout << "     Successfully decreased \n";
+						Sleep(0700); Sleep(0700);
+					}
+					else { cout << " 0 (kg/pc) can not decrease \n"; Sleep(0700); Sleep(0700); }
+					break;
+				case 48:
+					j = 1000;
+					break;
+				}// 'switch' for bun bread
+			}// 'for' loop for bun bread
+		}
+			   break;
+			   // Back to F_User menu 
+		case 48: {   k = 1000;
+			F_User_Main_Menu(); }
+			   break;
+		case 56: { // User info   
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                                   U S E R  I N F O         \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\t\t\t\t      User Information :" << endl << endl;
+			cout << "\t\t\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t\t\t      Telephone  : " << TellNum_Memory << endl;
+			cout << "\t\t\t\t      Login      : " << Login_Memory << endl;
+			cout << "\t\t\t\t      Password   : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		}
+			   break;
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+		} // switch ends
+
+	} // loop ends
+
+} // function ends
+
+// Cart Function 
+void F_Cart_Check() {
+	system("cls");
+	cout << "____________________________________________________________________________________________________ \n";
+	cout << "                                              C A R T \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+	// Check
+	for (int i = 1; i <= 1; i++) {
+		if (User_1.Product1_1_User > 0) {
+			cout << "\n\t\t\t  " << i << ". " << Product1_1.getName() << " --- " << User_1.Product1_1_User << " --- Price: " << User_1.Product1_1_User * Product1_1.getPrice();
+			i++;
+			Overall_Sum += User_1.Product1_1_User * Product1_1.getPrice();
+		}
+
+		if (User_1.Product1_2_User > 0) {
+			cout << "\n\t\t\t  " << i << ". " << Product1_2.getName() <<" --- " << User_1.Product1_2_User << " --- Price: " << User_1.Product1_2_User * Product1_2.getPrice();
+			i++;
+			Overall_Sum += User_1.Product1_2_User * Product1_2.getPrice();
+		}
+
+		if (User_1.Product1_3_User > 0) {
+			cout << "\n\t\t\t  " << i << ". " << Product1_3.getName() <<" --- " << User_1.Product1_3_User << " --- Price: " << User_1.Product1_3_User * Product1_3.getPrice();
+			i++;
+			Overall_Sum += User_1.Product1_3_User * Product1_3.getPrice();
+		}
+
+		if (User_1.Product2_1_User > 0) {
+			cout << "\n\t\t\t  " << i << ". " << Product2_1.getName() <<" --- " << User_1.Product2_1_User << " --- Price: " << User_1.Product2_1_User * Product2_1.getPrice();
+			i++;
+			Overall_Sum += User_1.Product2_1_User * Product2_1.getPrice();
+		}
+		if (User_1.Product2_2_User > 0) {
+			cout << "\n\t\t\t  " << i << ". " << Product2_2.getName() <<" --- " << User_1.Product2_2_User << " --- Price: " << User_1.Product2_2_User * Product2_2.getPrice();
+			i++;
+			Overall_Sum += User_1.Product2_2_User * Product2_2.getPrice();
+		}
+		if (User_1.Product2_3_User > 0) {
+			cout << "\n\t\t\t  " << i << ". " << Product2_3.getName() << " --- " << User_1.Product2_3_User << " --- Price: " << User_1.Product2_3_User * Product2_3.getPrice();
+			i++;
+			Overall_Sum += User_1.Product2_3_User * Product2_3.getPrice();
+		}
+		if (User_1.Product3_1_User > 0) {
+			cout << "\n\t\t\t  " << i << ". " << Product3_1.getName() << " --- " << User_1.Product3_1_User << " --- Price: " << User_1.Product3_1_User * Product3_1.getPrice();
+			i++;
+			Overall_Sum += User_1.Product3_1_User * Product3_1.getPrice();
+		}
+		if (User_1.Product3_2_User > 0) {
+			cout << "\n\t\t\t  " << i << ". " << Product3_2.getName() << " --- " << User_1.Product3_2_User << " --- Price: " << User_1.Product3_2_User * Product3_2.getPrice();
+			i++;
+			Overall_Sum += User_1.Product3_2_User * Product3_2.getPrice();
+		}
+		if (User_1.Product3_3_User > 0) {
+			cout << "\n\t\t\t  " << i << ". " << Product3_3.getName()<< " --- " << User_1.Product3_3_User << " --- Price: " << User_1.Product3_3_User * Product3_3.getPrice();
+			i++;
+			Overall_Sum += User_1.Product3_3_User * Product3_3.getPrice();
+		}
+
+		if (i == 1) { // if nothing go to Menu
+			cout << "\n\t You do not have any product in 'CART'.\n";
+			cout << "\tPress any key to go to 'Products Menu'\n\n" << endl;
+			system("pause");
+			Overall_Sum = 0;
+			F_User_Main_Menu();
+		}
+		if (i > 1) { // Menu for buying or back 
+			cout << "\n\n\t\t\t  Overall Price: " << Overall_Sum << " Sums" << endl;
+			cout << "\n\t   1. Buy now" << endl;
+			cout << "\t   0. Products Menu" << endl;
+
+			switch (_getch()) {
+			case 49: { //buy
+				system("cls");
+				////
+				cout << "____________________________________________________________________________________________________ \n";
+				cout << "                                              C A R T \n";
+				cout << "____________________________________________________________________________________________________\n\n";
+
+				////
+				cout << " Money will be taken from your 'Telephone Number': " << endl;
+				cout << " 1. OK" << endl;
+				cout << " Press any key to go back..." << endl;
+				switch (_getch()) {
+				case 49: {
+					cout << "\n  Transaction Successful!\n  Congratulations ! :)" << endl;
+					system("pause");
+					Overall_Sum = 0;
+					// Storage
+					User_1.Product1_1_User = 0; User_1.Product1_3_User = 0; User_1.Product1_2_User = 0;
+					User_1.Product2_1_User = 0; User_1.Product2_2_User = 0; User_1.Product2_3_User = 0;
+					User_1.Product3_1_User = 0; User_1.Product3_2_User = 0; User_1.Product3_3_User = 0;
+					F_User_Main_Menu();
+				}
+					   break;
+
+				default:  F_Cart_Check();
+
+				} // switch of case 49
+
+				////
+				system("pause");
+			}
+				   break;
+			case 48: { // Back
+				system("cls");
+				Overall_Sum = 0;
+				F_User_Main_Menu();
+			}
+				   break;
+			default: F_Cart_Check();
+			} // switch ends
+
+		} //if ends
+
+	}// loop end
+	//system("pause");
+} // function ends
+
+
+///////////////////////////////////////////////////////////////////////////////
+//  Owner part
+
+void F_Logo_Owner() {
+	system("cls");
+	cout << "____________________________________________________________________________________________________ \n";
+	cout << "        A L I B A Z A R                                                  O W N E R  M E N U         \n";
+	cout << "____________________________________________________________________________________________________\n\n";
+}
+
+
+void F_Owner_Main_Menu() {
+	system("cls");
+	cout << endl << endl;
+
+	// Entering as a Owner of shop
+	for (int k = 0; k < 1000; k++) {
+		F_Logo_Owner();
+		cout << "       Main Menu\n\n";
+		cout << "       1. Products in stock \n\n";
+		cout << "       2. Customers list \n\n";
+		cout << "       0. Back\n\n";
+		cout << "       Your choice: ";
+
+
+		switch (_getch()) {
+		case 49: {
+			F_Owner_Products_Stotage();
+		} break;
+
+		case 50: {
+
+			system("cls");
+			cout << "____________________________________________________________________________________________________ \n";
+			cout << "        A L I B A Z A R                                           C U S T O M E R S  L I S T        \n";
+			cout << "____________________________________________________________________________________________________\n\n";
+			cout << "\n\t\t\t   Customers list :" << endl << endl;
+
+			F_Owner_Customers_List();
+
+			system("pause");
+		}
+			   break;
+
+
+		case 48: {  // Back to Menu
+			system("cls");
+			k = 1000;
+			F_Sign_in();
+		} break;
+
+		default: { cout << "\n\n\t\t\t       Your choice is not available in Menu." << endl;
+			cout << "\t\t\t\t    Please enter correct keys.\n" << endl;
+			system("pause");
+		}
+			   break;
+		} // switch 
+	} // for loop 
+}
+
+
+void F_Owner_Products_Stotage() {
+	for (int i = 0; i < 1000; i++) {
+		F_Logo_Owner();
+
+		cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+		Product1_1.Display();
+		Product1_2.Display();
+		Product1_3.Display();
+		Product2_1.Display();
+		Product2_2.Display();
+		Product2_3.Display();
+		Product3_1.Display();
+		Product3_2.Display();
+		Product3_3.Display();
+
+		position1 = 1; // numbering of products return to 1
+		
+		cout << " \n   0. Back\n";
+		cout << "   Make changes in: ";
+		switch (_getch())
+		{
+		case '1':
+			F_Modify_Info_Products(1);
+			break;
+		case '2':
+			F_Modify_Info_Products(2);
+			break;
+		case '3':
+			F_Modify_Info_Products(3);
+			break;
+		case '4':
+			F_Modify_Info_Products(4);
+			break;
+		case '5':
+			F_Modify_Info_Products(5);
+			break;
+		case '6':
+			F_Modify_Info_Products(6);
+			break;
+		case '7':
+			F_Modify_Info_Products(7);
+			break;
+		case '8':
+			F_Modify_Info_Products(8);
+			break;
+		case '9':
+			F_Modify_Info_Products(9);
+			break;
+		case '0':   // Back to Menu
+			system("cls");
+			i = 1000;
+			F_Owner_Main_Menu();
+		    break;
+
+		case 'i' || 'I':  // User info   
+			system("cls");
+			cout << "\n\t\t\t   User Information:" << endl;;
+			cout << "\t\t    _______________________________" << endl << endl;;
+			cout << "\t\t      User Name  : " << Name_Memory << endl;
+			cout << "\t\t      Telephone  : " << TellNum_Memory << endl;
+			cout << "\t\t      Login      : " << Login_Memory << endl;
+			cout << "\t\t      Password   : " << Parol_Memory << endl << endl << endl;
+			system("pause");
+		    break;
+		
+		default:  cout << "\n\t\t      Your choice is not available in Menu" << endl;
+			cout << "\t\tPlease press any keyboard to continue program\n" << endl;
+			system("pause");
+		     break;
+
+		} // switch
+
+	} // for loop for products in stock  
+}
+
+
+void F_Modify_Info_Products(int take_product_location) {
+	for (int j = 0; j < 1000; j++) {
+		system("cls");
+
+		// It is for Displaying the products in order
+		cout << "    Products List  \t\t    Category\t\t       Price\t\t In Stock\n";
+		if (take_product_location == 1) Product1_1.Display();
+		else if (take_product_location == 2) Product1_2.Display();
+		else if (take_product_location == 3) Product1_3.Display();
+		else if (take_product_location == 4) Product2_1.Display();
+		else if (take_product_location == 5) Product2_2.Display();
+		else if (take_product_location == 6) Product2_3.Display();
+		else if (take_product_location == 7) Product3_1.Display();
+		else if (take_product_location == 8) Product3_2.Display();
+		else if (take_product_location == 39) Product3_3.Display();
+		position1 = 1;
+		cout << "____________________________________________________________________________________________________ \n";
+
+		cout << " 1. Change the price \n";
+		cout << " 2. Change the quantity in storage\n";
+		cout << " 3. Change the name of product\n";
+		cout << " 4. Change the class of product\n";
+		cout << " 0. Go back \n";
+		cout << " Your choice:\n\n";
+
+		switch (_getch()) {
+			// FOR CHANGING A PRICE
+		case 49:
+			cout << " Enter a new price: ";
+			cin >> Ch_Price;
+
+			if (Ch_Price >= 0) {
+				if (take_product_location == 1) Product1_1.price = Ch_Price;
+				else if (take_product_location == 2) Product1_2.price = Ch_Price;
+				else if (take_product_location == 3) Product1_3.price = Ch_Price;
+				else if (take_product_location == 4) Product2_1.price = Ch_Price;
+				else if (take_product_location == 5) Product2_2.price = Ch_Price;
+				else if (take_product_location == 6) Product2_3.price = Ch_Price;
+				else if (take_product_location == 7) Product3_1.price = Ch_Price;
+				else if (take_product_location == 8) Product3_2.price = Ch_Price;
+				else if (take_product_location == 39) Product3_3.price = Ch_Price;
+				cout << " Successfully changed!\n";
+				Sleep(0700); Sleep(0700);
+			}
+			else {
+				cout << " Price cannot be negative! Please check one more time.\n";
+				Sleep(0700); Sleep(0700);
+			}
+			break;
+			// FOR CHANGING THE QUANTITY IN STORAGE
+		case 50:
+			cout << " Enter a new quantity in storage: ";
+			cin >> Ch_Quantity;
+
+			if (Ch_Quantity > 0) {
+				if (take_product_location == 1) Product1_1.quantity = Ch_Quantity;
+				else if (take_product_location == 2) Product1_2.quantity = Ch_Quantity;
+				else if (take_product_location == 3) Product1_3.quantity = Ch_Quantity;
+				else if (take_product_location == 4) Product2_1.quantity = Ch_Quantity;
+				else if (take_product_location == 5) Product2_2.quantity = Ch_Quantity;
+				else if (take_product_location == 6) Product2_3.quantity = Ch_Quantity;
+				else if (take_product_location == 7) Product3_1.quantity = Ch_Quantity;
+				else if (take_product_location == 8) Product3_2.quantity = Ch_Quantity;
+				else if (take_product_location == 39) Product3_3.quantity = Ch_Quantity;
+				cout << " Successfully changed!\n";
+				Sleep(0700); Sleep(0700);
+			}
+			else {
+				cout << " Quantity cannot be negative\n";
+				Sleep(0700); Sleep(0700);
+			}
+			break;
+
+			// FOR CHANGING THE NAME
+		case 51:
+			cout << " Enter a new name: ";
+			getline(cin, Product_Name);
+
+			if (take_product_location == 1) Product1_1.name = Product_Name;
+			else if (take_product_location == 2) Product1_2.name = Product_Name;
+			else if (take_product_location == 3) Product1_3.name = Product_Name;
+			else if (take_product_location == 4) Product2_1.name = Product_Name;
+			else if (take_product_location == 5) Product2_2.name = Product_Name;
+			else if (take_product_location == 6) Product2_3.name = Product_Name;
+			else if (take_product_location == 7) Product3_1.name = Product_Name;
+			else if (take_product_location == 8) Product3_2.name = Product_Name;
+			else if (take_product_location == 39) Product3_3.name = Product_Name;
+			break;
+
+			// FOR CHANGING THE CLASS OF PRODUCT
+		case 52:
+			cout << " Enter a new Class Name: ";
+			getline(cin, Product_Class);
+
+			if (take_product_location == 1) Product1_1.class_of_products = Product_Class;
+			else if (take_product_location == 2) Product1_2.class_of_products = Product_Class;
+			else if (take_product_location == 3) Product1_3.class_of_products = Product_Class;
+			else if (take_product_location == 4) Product2_1.class_of_products = Product_Class;
+			else if (take_product_location == 5) Product2_2.class_of_products = Product_Class;
+			else if (take_product_location == 6) Product2_3.class_of_products = Product_Class;
+			else if (take_product_location == 7) Product3_1.class_of_products = Product_Class;
+			else if (take_product_location == 8) Product3_2.class_of_products = Product_Class;
+			else if (take_product_location == 39) Product3_3.class_of_products = Product_Class;
+			break;
+		case 48:
+			j = 1000;
+			break;
+		}// 'switch' 
+	}// 'for' loop 
+}
+
+// Customer List
+void F_Owner_Customers_List() {
+	cout << endl;
+
+	ifstream in;
+	int Num = 1;
+	string Info;
+
+	in.open("User_Info.txt");
+	while (in) {
+		cout << "\t " << Num << "." << endl;
+		cout << "\t-------------------------" << endl;
+		getline(in, Info);
+		cout << "\t User Name: " << Info << endl;
+		getline(in, Info);
+		cout << "\t Phone    : " << Info << endl;
+		getline(in, Info);
+		cout << "\t Login    : " << Info << endl;
+		getline(in, Info);
+		cout << "\t Password : " << Info << endl;
+		Num++;
+		cout << endl;
+	}
+	cout << "\t-------------------------" << endl;
+	in.close();
+}
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <iostream>
+#include <windows.h>
+#include <cstdlib>
+#include <conio.h>
+#include <ctime>
+
+using namespace std;
+
+//Calculators
+int k;
+
+// Logical Calculations
+int Rand, Case_1 = 0, Case_2 = 0, x, Turn_1, Turn_2, TURN_1, TURN_2;
+
+//Window style
+sf::RenderWindow window(sf::VideoMode(1000, 650), "OLAF Game", sf::Style::Close | sf::Style::Resize);
+
+
+//identifires of Game
+sf::RectangleShape MainMenu(sf::Vector2f(1000.0f, 650.0f));
+sf::RectangleShape Developers(sf::Vector2f(1000.0f, 650.0f));
+sf::RectangleShape Help(sf::Vector2f(1000.0f, 650.0f));
+sf::RectangleShape Quit(sf::Vector2f(1000.0f, 650.0f));
+sf::RectangleShape Loading_1(sf::Vector2f(1000.0f, 650.0f));
+sf::RectangleShape Loading_2(sf::Vector2f(1000.0f, 650.0f));
+sf::RectangleShape Loading_3(sf::Vector2f(1000.0f, 650.0f));
+sf::RectangleShape Map(sf::Vector2f(1000.0f, 650.0f));
+sf::RectangleShape Player(sf::Vector2f(45.0f, 30.0f));
+
+//Music
+//sf::SoundBuffer Rington; sf::Sound sound_Rington;
+//sf::SoundBuffer BackMusic; sf::Sound sound_BackMusic;
+
+//Functions
+void F_MainMenu();
+void F_Help();
+void F_Developers();
+void F_Quit();
+void F_Start();
+void F_Logic();
+void F_Map();
+
+
+void F_MainMenu() {
+	window.clear(sf::Color::White);
+	window.draw(MainMenu);
+	window.display();
+
+	//Start Game
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Numpad1)) {
+		//sound_Rington.play(); 
+		F_Start();
+	}
+	//Help Desck
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Numpad2)) {
+		//sound_Rington.play(); 
+		F_Help();
+	}
+	//Developers 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Numpad3)) {
+		//sound_Rington.play();
+		F_Developers();
+	}
+	//Quit
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Numpad4)) {
+		//sound_Rington.play();
+		F_Quit();
+	}
+}
+
+
+void F_Help() {
+	window.clear(sf::Color::White);
+	window.draw(Help);
+	window.display();
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+	{
+		//sound_Rington.play();
+		F_MainMenu();
+	}
+	else { F_Help(); }
+}
+
+void F_Developers() {
+	window.clear(sf::Color::White);
+	window.draw(Developers);
+	window.display();
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+		//sound_Rington.play(); F_MainMenu();
+	}
+	else { F_Developers(); }
+}
+
+void F_Quit() {
+	window.clear(sf::Color::White);
+	window.draw(Quit);
+	window.display();
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Numpad2)) {
+		//sound_Rington.play(); 
+		F_MainMenu();
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Numpad1))
+	{
+		//sound_Rington.play();
+		system("pause");
+		window.close();
+	}
+	else { F_Quit(); }
+}
+
+
+void F_Start() {
+
+	F_Map();
+	if ((x % 2 == 0) && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+		//sound_Rington.play();
+		window.clear();
+		window.display();
+		Sleep(0700); Sleep(0700); Sleep(0700);
+		x++;
+		F_Logic();
+		F_Start();
+	}
+	else if (x % 2 == 1) {
+		//sound_Rington.play();
+		window.clear();
+		window.display();
+		Sleep(0700); Sleep(0700); Sleep(0700);
+		x++;
+		F_Logic();
+		F_Start();
+	}
+	else F_Start();
+}
+
+
+void F_Loading() {
+	for (int i = 1; i <= 12; i++) {
+
+		window.clear(sf::Color::White);
+		if (i == 1 || i == 4 || i == 7 || i == 10) window.draw(Loading_1);
+		if (i == 2 || i == 5 || i == 8 || i == 11) window.draw(Loading_2);
+		if (i == 3 || i == 6 || i == 9 || i == 12) window.draw(Loading_3);
+		window.display();
+		Sleep(0700);
+	}
+
+}
+
+//main part
+int main()
+{
+	k = 0;
+	//Identifiers Picture 
+	sf::Texture TextMainMenu; TextMainMenu.loadFromFile("Main_Menu.jpg"); MainMenu.setTexture(&TextMainMenu);
+	sf::Texture TextHelp; TextHelp.loadFromFile("Help.jpg"); Help.setTexture(&TextHelp);
+	sf::Texture TextDevelopers; TextDevelopers.loadFromFile("Developers.jpg"); Developers.setTexture(&TextDevelopers);
+	sf::Texture TextQuit; TextQuit.loadFromFile("Quit_Main.jpg"); Quit.setTexture(&TextQuit);
+	sf::Texture TextLoading1; TextLoading1.loadFromFile("Loading1.jpg"); Loading_1.setTexture(&TextLoading1);
+	sf::Texture TextLoading2; TextLoading2.loadFromFile("Loading2.jpg"); Loading_2.setTexture(&TextLoading2);
+	sf::Texture TextLoading3; TextLoading3.loadFromFile("Loading3.jpg"); Loading_3.setTexture(&TextLoading3);
+	sf::Texture TextMap; TextMap.loadFromFile("Map.png"); Map.setTexture(&TextMap);
+	sf::Texture TextPlayer_1; TextPlayer_1.loadFromFile("Player.png"); Player.setTexture(&TextPlayer_1);
+
+	// Musics 
+	//if (!Rington.loadFromFile("Rington.wav")) { cout << "ERROR" << endl; } sound_Rington.setBuffer(Rington);
+	//if (!BackMusic.loadFromFile("BackMusic.wav")) { cout << "ERROR" << endl; } sound_BackMusic.setBuffer(BackMusic);
+
+	//Starting point
+	while (window.isOpen())
+	{
+
+		sf::Event evnt;
+		while (window.pollEvent(evnt))
+		{
+			switch (evnt.type) {
+			case sf::Event::Closed: window.close();
+				break;
+			case sf::Event::Resized:;
+				break;
+			}
+		}
+		//Others
+
+
+		// Outputs
+		if (k == 0) {// sound_BackMusic.play();
+		F_Loading(); k++; }
+		//k = 1;
+		if (k == 1) { F_MainMenu(); }
+	}
+
+	return 0;
+}
+#include <iostream>
+#include <iomanip>
+#include <windows.h>
+#include <ctime>
+
+using std::setw;
+using namespace std;
+void numbers_view();
+
+int main1()
+{
+	numbers_view();
+
+	return 0;
+}
+
+void numbers_view()
+{
+	int time = 10;
+	Sleep(1000);
+	while (time >= 0)
+	{
+		cout << "\rTimer: " << setw(5) << time << flush;
+		Sleep(1000);
+		time--;
+		const char* num9[] =
+		{
+			"                     ",
+			"      999999999      ",
+			"    99:::::::::99    ",
+			"  99:::::::::::::99  ",
+			" 9::::::99999::::::9 ",
+			" 9:::::9     9:::::9 ",
+			" 9:::::9     9:::::9 ",
+			"  9:::::99999::::::9 ",
+			"   99::::::::::::::9 ",
+			"     99999::::::::9  ",
+			"          9::::::9   ",
+			"         9::::::9    ",
+			"        9::::::9     ",
+			"       9:::::9       ",
+			"      9:::::9        ",
+			"     9999999         ", NULL
+		};
+		const char* num8[] =
+		{
+			"                     ",
+			"      888888888      ",
+			"    88:::::::::88    ",
+			"  88:::::::::::::88  ",
+			" 8::::::88888::::::8 ",
+			" 8:::::8     8:::::8 ",
+			" 8:::::8     8:::::8 ",
+			"  8:::::88888:::::8  ",
+			"   8:::::::::::::8   ",
+			"  8:::::88888:::::8  ",
+			" 8:::::8     8:::::8 ",
+			" 8:::::8     8:::::8 ",
+			" 8::::::88888::::::8 ",
+			"  88:::::::::::::88  ",
+			"    88:::::::::88    ",
+			"      888888888      ", NULL
+		};
+		const char* num7[] =
+		{
+			"                     ",
+			" 77777777777777777777",
+			" 7::::::::::::::::::7",
+			" 7::::::::::::::::::7",
+			" 777777777777:::::::7",
+			"            7::::::7 ",
+			"           7::::::7  ",
+			"          7::::::7   ",
+			"         7::::::7    ",
+			"        7::::::7     ",
+			"       7::::::7      ",
+			"      7::::::7       ",
+			"     7::::::7        ",
+			"    7::::::7         ",
+			"   7::::::7          ",
+			"  77777777           ",NULL
+		};
+		const char* num6[] =
+		{
+			"                     ",
+			"         66666666    ",
+			"        6::::::6     ",
+			"       6::::::6      ",
+			"      6::::::6       ",
+			"     6::::::6        ",
+			"    6::::::6         ",
+			"   6::::::::66666    ",
+			"  6::::::::::::::6   ",
+			" 6::::::66666:::::6  ",
+			" 6:::::6     6:::::6 ",
+			" 6:::::6     6:::::6 ",
+			" 6::::::66666::::::6 ",
+			"  66:::::::::::::66  ",
+			"    66:::::::::66    ",
+			"      666666666      ",NULL
+		};
+		const char* num5[] =
+		{
+			"                     ",
+			" 555555555555555555  ",
+			" 5::::::::::::::::5  ",
+			" 5:::::555555555555  ",
+			" 5:::::5             ",
+			" 5:::::5             ",
+			" 5:::::5555555555    ",
+			" 5:::::::::::::::5   ",
+			" 555555555555:::::5  ",
+			"             5:::::5 ",
+			"             5:::::5 ",
+			" 5555555     5:::::5 ",
+			" 5::::::55555::::::5 ",
+			"  55:::::::::::::55  ",
+			"    55:::::::::55    ",
+			"      555555555      ",NULL
+		};
+		const char* num4[] =
+		{
+			"                     ",
+			"        444444444    ",
+			"       4::::::::4    ",
+			"      4:::::::::4    ",
+			"     4::::44::::4    ",
+			"    4::::4 4::::4    ",
+			"   4::::4  4::::4    ",
+			"  4::::4   4::::4    ",
+			" 4::::444444::::444  ",
+			" 4::::::::::::::::4  ",
+			" 4444444444:::::444  ",
+			"           4::::4    ",
+			"           4::::4    ",
+			"         44::::::44  ",
+			"         4::::::::4  ",
+			"         4444444444  ",NULL
+		};
+		const char* num3[] =
+		{
+			"                     ",
+			" 3333333333333333    ",
+			" 3:::::::::::::::33  ",
+			" 3::::::33333::::::3 ",
+			" 3333333     3:::::3 ",
+			"             3:::::3 ",
+			"             3:::::3 ",
+			"     33333333:::::3  ",
+			"     3:::::::::::3   ",
+			"     33333333:::::3  ",
+			"             3:::::3 ",
+			"             3:::::3 ",
+			" 3333333     3:::::3 ",
+			" 3::::::33333::::::3 ",
+			" 3:::::::::::::::33  ",
+			"  333333333333333    ",NULL
+		};
+		const char* num2[] =
+		{
+			"                     ",
+			" 222222222222222     ",
+			" 2:::::::::::::::22  ",
+			" 2::::::222222:::::2 ",
+			" 2222222     2:::::2 ",
+			"             2:::::2 ",
+			"             2:::::2 ",
+			"          2222::::2  ",
+			"     22222::::::22   ",
+			"   22::::::::222     ",
+			"  2:::::22222        ",
+			" 2:::::2             ",
+			" 2:::::2       222222",
+			" 2::::::2222222:::::2",
+			" 2::::::::::::::::::2",
+			" 22222222222222222222",NULL
+		};
+		const char* num1[] =
+		{
+			"                     ",
+			"       1111111       ",
+			"      1::::::1       ",
+			"     1:::::::1       ",
+			"     111:::::1       ",
+			"        1::::1       ",
+			"        1::::1       ",
+			"        1::::1       ",
+			"        1::::l       ",
+			"        1::::l       ",
+			"        1::::l       ",
+			"        1::::l       ",
+			"     111::::::111    ",
+			"     1::::::::::1    ",
+			"     1::::::::::1    ",
+			"     111111111111    ",NULL
+		};
+		const char* num0[] =
+		{
+			"                     ",
+			"      000000000      ",
+			"    00:::::::::00    ",
+			"  00:::::::::::::00  ",
+			" 0:::::::000:::::::0 ",
+			" 0::::::0   0::::::0 ",
+			" 0:::::0     0:::::0 ",
+			" 0:::::0     0:::::0 ",
+			" 0:::::0 000 0:::::0 ",
+			" 0:::::0     0:::::0 ",
+			" 0:::::0     0:::::0 ",
+			" 0::::::0   0::::::0 ",
+			" 0:::::::000:::::::0 ",
+			"  00:::::::::::::00  ",
+			"    00:::::::::00    ",
+			"      000000000      ",NULL
+		};
+
+		switch (time) {
+		case 0:
+			cout << num9;
+			break;
+		case 1:
+			cout << num8;
+			break;
+		case 2:
+			cout<<num7;
+			break;
+		case 3:
+		  cout<<num6;
+			break;
+		case 4:
+			cout<<num5;
+			break;
+		case 5:
+			cout<<num4;
+			break;
+		case 6:
+			cout<<num3;
+			break;
+		case 7:
+			cout<<num2;
+			break;
+		case 8:
+			cout<<num1;
+			break;
+		case 9:
+			cout<<num0;
+			break;
+		default:
+			
+			break;
+		}
+	}
+
+
+
+#include <iostream>
+#include <string>
+#include <conio.h>
+#include <windows.h>
+using namespace std;
+
+HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+void welcome();
+void instructions();
+void record();
+void incorrectChoice();
+void lostgame();
+void win();
+
+
+
+//game initial settings 
+bool game = false;
+const int width = 50;
+const int height = 20;
+
+//variable for snake position and fruit position and also score 
+int x, y, fx, fy, score;
+// tails array
+
+int tx[100], ty[100];
+int nt;
+
+
+enum Direction { STOP = 0, LEFT, RIGHT, UP, DOWN };
+Direction dir;
+
+
+
+//Initial values when game start
+void Init() {
+	game = true;
+	dir = STOP;
+	x = width / 2;
+	y = height / 2;
+	fx = rand() % width;
+	fy = rand() % height;
+	score = 0;
+	tx[100] = {};
+	ty[100] = {};
+
+}
+
+//Creating a map container where snake and fruit appears 
+void Map() {
+	system("cls");
+	SetConsoleTextAttribute(hConsole, 180);
+	for (int i = 0; i < width + 2; i++)
+		cout << "#";
+	cout << endl;
+
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			if (j == 0)
+				cout << "#";
+			if (i == y && j == x)
+				cout << "O";
+			else if (i == fy && j == fx)
+				cout << "X";
+			else
+			{
+				bool print = false;
+				for (int k = 0; k < nt; k++) {
+					if (tx[k] == j && ty[k] == i)
+					{
+						cout << "o";
+						print = true;
+					}
+
+				}
+				if (!print)
+					cout << " ";
+			}
+
+			if (j == width - 1)
+				cout << "#";
+		}
+		cout << endl;
+	}
+
+	for (int i = 0; i < width + 2; i++)
+		cout << "#";
+	cout << endl;
+	cout << "Score is " << score << endl;
+
+}
+// managing input of keyboard to control snake
+void Input() {
+	if (_kbhit())
+	{
+		switch (_getch())
+		{
+		case 'a':
+			dir = LEFT;
+			break;
+		case 'd':
+			dir = RIGHT;
+			break;
+		case 'w':
+			dir = UP;
+			break;
+		case 's':
+			dir = DOWN;
+			break;
+		case 'x':
+			game = false;
+			break;
+		case 'r':
+			dir = STOP;
+			welcome();
+		default:
+			break;
+	}
+
+	}
+}
+// logic how snake should grow in size and when game stops
+void Logic() {
+
+	int prevx = tx[0];
+	int prevy = ty[0];
+	int prev2x, prev2y;
+	tx[0] = x;
+	ty[0] = y;
+	for (int i = 1; i < nt; i++) {
+		prev2x = tx[i];
+		prev2y = ty[i];
+		tx[i] = prevx;
+		ty[i] = prevy;
+		prevx = prev2x;
+		prevy = prev2y;
+	}
+
+
+
+	switch (dir)
+	{
+	case UP:
+		y--;
+		break;
+	case DOWN:
+		y++;
+		break;
+	case LEFT:
+		x--;
+		break;
+	case RIGHT:
+		x++;
+		break;
+
+	default:
+		break;
+	}
+	if (x >= width) x = 0; else if (x < 0) x = width - 1;
+	if (y >= height) y = 0; else if (y < 0) y = height - 1;
+
+	for (int i = 0; i < nt; i++) {
+		if (tx[i] == x && ty[i] == y) {
+			lostgame();
+		}
+
+	}
+
+	if (x == fx && y == fy) {
+		score += 1;
+		nt++;
+		fx = rand() % width;
+		fy = rand() % height;
+	}
+}
+//condition when a player wins
+void win() {
+	if (score == 100) {
+		system("cls");
+		cout << endl << endl << endl << endl << endl;
+		cout << "                               ";
+		cout << "Congratulations you won the game " << endl;
+		cout << endl;
+		cout << "                               ";
+		cout << "To go back please enter any key" << endl;
+		char back;
+		cin >> back;
+		if (back) {
+			welcome();
+			game = false;
+		}
+	}
+}
+//starting game
+void startGame() {
+	Init();
+	while (game) {
+		Map();
+		Input();
+		Logic();
+		win();
+		Sleep(10);
+	}
+}
+
+void welcome() {
+	system("cls");
+	cout << endl << endl << endl << endl << endl << endl << endl;
+	cout << "                               ";
+	cout << "Welcome to the snake game!" << endl;
+	cout << "                               " << "1. If you want to start game press 1" << endl;
+	cout << "                               " << "2. To see instruction press 2" << endl;
+	cout << "                               " << "3. To see record press 3" << endl;
+	char choice;
+	cin >> choice;
+	switch (choice) {
+	case '1':
+		system("cls");
+		startGame();
+	case '2':
+		instructions();
+	case '3':
+		record();
+	default:
+		incorrectChoice();
+	}
+}
+
+void instructions() {
+	system("cls");
+	cout << endl << endl << endl << endl << endl << endl << endl;
+	cout << "                               ";
+	cout << "Welcome to the snake game!" << endl;
+	cout << endl;
+	cout << "                               " << "Here are instructions" << endl;
+	cout << "                               " << "1. If you reach current record you won the game" << endl;
+	cout << endl;
+	cout << "                               " << "2. When you grow up in size you cannot touch yourself, " << endl << "                               " << "if you touch you will lose the game" << endl;
+	cout << endl;
+	cout << "                               " << "3. When you grow up in size you cannot touch yourself," << endl << "                               " << "if you move backwards when you body is backward" << endl << "                               " << "you automatically lose the game" << endl;
+	cout << endl;
+	char back;
+	cout << "                               " << "To go back press any key" << endl;
+	cin >> back;
+	if (back) welcome();
+}
+
+void record() {
+	system("cls");
+	cout << endl << endl << endl << endl << endl << endl << endl;
+	cout << "                               ";
+	cout << "Welcome to the snake game!" << endl;
+	cout << endl;
+	cout << "                               " << "Current record is 100" << endl;
+	cout << endl;
+	cout << "                               " << "If you reach 100 you will win the game" << endl;
+	char back;
+	cout << endl;
+	cout << "                               " << "To go back press any key" << endl;
+	cin >> back;
+	if (back) welcome();
+}
+
+void incorrectChoice() {
+	cout << "Please try again next time" << endl;
+	cout << endl;
+	char back;
+	cout << "To go back press any key" << endl;
+	cin >> back;
+	if (back) welcome();
+}
+void lostgame() {
+	game = false;
+	system("cls");
+	cout << endl << endl << endl << endl << endl << endl << endl;
+	cout << "                               ";
+	cout << "Sorry you lost the game " << endl;
+	cout << "                               " << "Your score was " << score << endl;
+	cout << "                               ";
+	cout << "To to back press any button" << endl;
+	char back;
+	cin >> back;
+	if (back) {
+		game = false;
+		welcome();
+	}
+
+}
+
+int main() {
+	SetConsoleTextAttribute(hConsole, 116);
+	welcome();
+	return 0;
+}
+}
