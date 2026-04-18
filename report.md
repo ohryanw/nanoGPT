@@ -54,4 +54,7 @@ void displayallb()
 		 cout<<"\n\n\tRecord Not Found"; }
 	 getch();
  }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
